@@ -4,7 +4,7 @@ Marketplace de plugins con skills para trabajos de electromecánica y diseño 3D
 
 ## Plugins
 
-### `ingenieria-3d` (propio, 6 skills)
+### `ingenieria-3d` (propio, 7 skills)
 
 | Skill | Para qué sirve |
 |---|---|
@@ -14,6 +14,7 @@ Marketplace de plugins con skills para trabajos de electromecánica y diseño 3D
 | `informe-tecnico` | Informes, trabajos prácticos y memorias técnicas en Word y PDF |
 | `calculos-ingenieria` | Memorias de cálculo: iluminación, aire comprimido, conductores, motores, cintas y balances de masa y energía |
 | `conectar-programas-cad` | Guía para conectar Claude con Blender y FreeCAD (servidores MCP) y que trabaje directamente en esos programas |
+| `trabajar-con-codex` | Claude le consulta a Codex (ChatGPT) desde la terminal para una segunda opinión o una revisión independiente, y combina las dos respuestas |
 
 ### `cad-3d-comunidad` (10 skills de la comunidad)
 
@@ -70,6 +71,7 @@ plugins/ingenieria-3d/                   skills propias
     informe-tecnico/                     SKILL.md
     calculos-ingenieria/                 SKILL.md
     conectar-programas-cad/              SKILL.md
+    trabajar-con-codex/                  SKILL.md
 plugins/cad-3d-comunidad/                CREDITOS.md, licencias/, skills/ (10)
 plugins/fluidos-bombas-termo/            CREDITOS.md, licencias/, skills/ (29)
 plugins/ciencia-y-calculo/               CREDITOS.md, licencias/, skills/ (12)
