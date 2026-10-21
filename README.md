@@ -9,6 +9,9 @@ Plugin con skills para trabajos de electromecánica y diseño 3D. Una vez instal
 | `visor-3d-interactivo` | Visores 3D en una página HTML (three.js): rotar con el mouse, capas, vistas, datos de cada equipo y animaciones |
 | `informe-tecnico` | Informes, trabajos prácticos y memorias técnicas en Word y PDF |
 | `calculos-ingenieria` | Memorias de cálculo: iluminación, aire comprimido, conductores, motores, cintas y balances de masa y energía |
+| `conectar-programas-cad` | Guía para conectar Claude con Blender y FreeCAD (servidores MCP) y que trabaje directamente en esos programas |
+
+**Más recursos de la comunidad**: en [CATALOGO.md](CATALOGO.md) hay skills y plugins de otras personas para CAD, 3D, fluidos, bombas, termodinámica y cálculo científico, con su licencia, lo que revisé de cada uno y cómo instalarlos.
 
 ## Instalación
 
@@ -47,6 +50,8 @@ plugins/ingenieria-3d/
     visor-3d-interactivo/                SKILL.md + plantilla/visor.html
     informe-tecnico/                     SKILL.md
     calculos-ingenieria/                 SKILL.md
+    conectar-programas-cad/              SKILL.md
+CATALOGO.md                              recursos de la comunidad, con licencias
 ```
 
 ## Requisitos de los scripts
