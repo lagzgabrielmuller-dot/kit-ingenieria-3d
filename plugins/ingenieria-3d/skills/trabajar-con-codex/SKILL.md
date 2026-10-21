@@ -24,8 +24,8 @@ $OutputEncoding = [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $pedido = @'
 Sos un revisor técnico independiente. Contexto: <datos, supuestos y resultado completos>.
 Tarea: <qué revisar o resolver>.
-Respondé en español con: 1) si estás de acuerdo o no, 2) errores encontrados con su corrección,
-3) supuestos dudosos, 4) tu resultado si difiere, con el cálculo.
+Respondé en español, con las fórmulas en texto plano (sin LaTeX): 1) si estás de acuerdo o no,
+2) errores encontrados con su corrección, 3) supuestos dudosos, 4) tu resultado si difiere, con el cálculo.
 '@
 $salida = Join-Path $env:TEMP "codex_respuesta.md"
 $pedido | codex exec --skip-git-repo-check --sandbox read-only --ephemeral -o $salida -
@@ -37,6 +37,7 @@ Get-Content $salida -Encoding UTF8
 - `-o archivo`: guarda solo la respuesta final; el progreso sale por la terminal.
 - Para revisar cambios de código dentro de un repositorio git: `codex review` (opciones en `codex review --help`).
 - Puede tardar de 30 segundos a varios minutos: usar un tiempo de espera largo y leer la salida cuando termine.
+- Con Desktop Commander, el bloque completo de arriba se puede mandar como un solo comando (probado en Windows 11 con Codex 0.163).
 
 Solo usar `--sandbox workspace-write` (y siempre con `-C` apuntando a una carpeta concreta) si el usuario pide expresamente que Codex modifique archivos. Nunca usar las opciones `--dangerously-...`.
 
