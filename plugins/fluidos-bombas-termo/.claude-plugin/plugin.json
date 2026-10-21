@@ -1,0 +1,13 @@
+{
+  "name": "fluidos-bombas-termo",
+  "displayName": "Fluidos, bombas y termodinámica (comunidad)",
+  "description": "Skills de la comunidad para ingeniería de fluidos: bombas centrífugas y volumétricas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías y accesorios, propiedades termodinámicas con CoolProp y thermo, unidades con pint, análisis estructural, OpenFOAM y automatización de SolidWorks.",
+  "author": {
+    "name": "Soljourner (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": ["fluidos", "bombas", "npsh", "termodinamica", "coolprop", "pint", "solidworks", "openfoam"]
+}

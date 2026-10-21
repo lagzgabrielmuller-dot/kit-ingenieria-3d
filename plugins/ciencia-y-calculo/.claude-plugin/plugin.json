@@ -1,0 +1,13 @@
+{
+  "name": "ciencia-y-calculo",
+  "displayName": "Ciencia y cálculo (comunidad)",
+  "description": "Skills de la comunidad para cálculo y análisis: SymPy, gráficos con Matplotlib, unidades e incertidumbre de mediciones, estadística, simulación de procesos con SimPy, optimización con pymoo, MATLAB y Octave, combustión con Cantera, conversión de documentos, diagramas Mermaid y pósters en PowerPoint.",
+  "author": {
+    "name": "K-Dense Inc. (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": ["sympy", "matplotlib", "incertidumbre", "unidades", "estadistica", "simpy", "optimizacion", "octave"]
+}

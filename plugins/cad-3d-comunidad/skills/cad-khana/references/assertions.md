@@ -1,0 +1,595 @@
+# Mechanism assertions
+
+Load before writing or changing any `assert_*`. What a green run does
+*not* tell you is in `SKILL.md` §What a green check does not mean;
+field meanings are in `diagnostics.md`.
+
+Every assertion records a result in `mechanism.json`. If any fail,
+`check()` prints one line per failure (name + detail) to stderr — the
+terminal output alone names every failing assertion; the JSON has the
+full context. All failures are collected — you get every problem in one
+pass, not just the first. `inspect()` failures print the same way,
+prefixed with the part name.
+
+**Under the `khana` CLI the whole script runs, then it exits nonzero
+once.** A red part no longer aborts the run, so a script that checks or
+inspects many parts leaves *every* diagnostics JSON current in one pass,
+and the CLI ends with a roll-up naming each failure and its JSON path.
+Run the same script with a bare interpreter and the old behaviour
+applies — the first failure raises `SystemExit(1)` — because nothing
+there can exit nonzero after the fact. **Prefer `khana check` for
+multi-part scripts**; a bare run stops early and leaves the later parts'
+JSON stale from a previous run while it still reads as current.
+
+| Assertion | Checks |
+|---|---|
+| `.assert_no_interference(a, b)` | Parts `a` and `b` don't overlap (intersection volume ≤ 0.001 mm³). |
+| `.assert_distance(a, b, min_mm=…, max_mm=…)` | Bounded distance from part `a` to part `b` **or a datum `Plane`**. Either bound alone, or both for "close but not touching" (a gear mesh). See below for `along=` and `grow_*_mm`. |
+| `.assert_clear_of(parts, keepout, name=…, min_mm=0, seat=None, excluding=…)` | Parts stay out of a **keep-out solid that is not a part**: a driver's corridor, a bolt's drop-in path, an RF zone. `keepout` is the solid, or the path of one a unit declared with `with_keepout`. One result per call: `value` is the least distance over the parts. Any overlap fails; `min_mm` is clearance past touching, or past the `seat`. See below. |
+| `.assert_within(inner, outer, along="Z")` | `inner`'s **footprint** along the axis lies within `outer`'s — a foot resting *on* a rail stays on it, a ring stays over its seat. Holes count. `value` is the volume outside, in mm³. See below. |
+| `.assert_scalar(name, value, ge=…, le=…)` | A named claim about a non-geometric scalar (friction budget, torque margin). No bounds = pure recorder. |
+| `.assert_tangent_contact(a, b, tol_mm=…)` | Parts `a` and `b` **touch**: surface gap ≤ `tol_mm` (default 1e-3, noise allowance — not a design gap) and no real overlap. A gap fails, an overlap fails. See below. |
+| `.assert_allowed_contact(a, b, max_overlap_mm3=…, min_overlap_mm3=…)` | Design-intended overlap stays within bounds (a press-fit modeled at its true interference). A gap passes unless `min_overlap_mm3` makes engagement itself the claim. See below. |
+| `.assert_solid_count(part, eq=1)` | `part` is exactly `eq` solids. The only claim about **connectivity** — a cut that severs a part leaves its volume, bbox, clearances and every drawn view plausible. `eq=N` declares a part that is several solids on purpose. See below. |
+| `.assert_interference(a, b, reason=…)` | Parts `a` and `b` **do** overlap (intersection volume > 0.001 mm³). Regression alarm for a documented, accepted overlap — fails if the overlap disappears, forcing the assertion to be removed when the design gap gets fixed. |
+| `.assert_anchors_coincident(a, b, tol_mm=1e-6)` | Two named anchors resolve to the same **position** (orientation ignored) — two units' beliefs about a shared datum agree. See `composition.md` §Named interface anchors. |
+
+Give assertions a `name=` when you'd benefit from a specific label in
+the diagnostics; otherwise they get an auto-generated one.
+
+`a`, `b`, `inner`, `outer` and `parts` name whole parts. To claim
+something about **one feature of a part** — one post of four, a boss, a
+seat — name the feature as a region and write `part@region`; see
+[Regions](#regions-a-claim-about-one-feature-of-a-part).
+
+## One piece, or several on purpose
+
+Every part reports `solid_count`, and `khana check` **warns**
+(`multi_solid`, never a failure) about any part that is more than one
+solid and that no claim speaks for. Nothing else sees this: a pocket
+cut one millimetre too deep can detach a lip into a free ring with every
+scalar green and every `khana draw` view unchanged. Answer the warning
+one of two ways:
+
+```python
+a = a.assert_solid_count("body",             # must be one piece — red if severed
+                         detail="above 1 the glow band has cut the lip off — "
+                                "check the five bridges")
+a = a.assert_solid_count("glow_band", eq=5)  # five segments by design; warning goes
+```
+
+`detail=` is appended to the count **when the claim fails**, and only
+then. Use it: this is the one failure whose cause no drawing shows, so
+write it as the failure hypothesis, in the imperative — what would have
+severed the part and where to look. It stays out of a passing result
+on purpose: on a green `eq=2` the same sentence would read as a report
+of the failure. (`assert_scalar`'s `detail` is different — it labels a
+value, so it shows either way.)
+
+Derive `eq` from the **design intent the count expresses** (a spoke
+count, which sector carries the opening) rather than typing the
+number — and **never from the feature whose removal is the red
+test**. `eq=len(BRIDGE_DEGS)` tracks the injection: empty the list and
+the claim moves with it and stays green, a rubber stamp that looks
+identical to a real claim before and after. Where the count has no
+source independent of the geometry under test, state the number and
+say why in a comment.
+
+`inspect()` answers the same warning in the printability file:
+
+```python
+inspect(glow_band(), method=FDM(), name="glow_band", solid_count=5)
+```
+
+Declared, the count is a claim like `wall_min` — a `solid_count:5`
+entry in `assertions[]` with the count in `value`, a mismatch fails the
+run (waivable under kind `solid_count`), and the warning is gone.
+Undeclared, a part above one solid keeps warning. There is no way to
+silence it without stating the number.
+
+The assembly claim and the `inspect()` claim state one fact twice, so
+give them **one derivation**: a constant or a small function in the
+declaration module (`sector_solid_count(k, height)`), imported by the
+printability script — not the expression copied, which leaves the two
+free to drift.
+
+Bodies that touch only along an edge or at a point count as separate
+solids — they share no material, and will not print as one part.
+**Red-test the claim by removing the bridge, not by shrinking it:** a
+0.001 mm bridge is still a bridge, so an epsilon injection leaves it
+green. (A bridge that thin is `min_wall`'s to catch, not this claim's.)
+It takes no `during=` — the count is the same at every pose.
+
+`assert_interference` is the exception, not the rule. Use it only when
+a real design constraint leaves an overlap that hasn't been resolved
+yet (e.g., a junction whose bracket hasn't been designed). The
+`reason=` string is recorded in `detail` on every run — after the
+failure when the overlap goes away — so a reader of a green file sees
+why the overlap is there. The same holds for `assert_allowed_contact`
+and group `known_overlaps`. Default to `assert_no_interference`
+everywhere else.
+
+## Distance and scalar claims
+
+Don't hand-derive from constants what the geometry already knows: a
+bare Python `assert` crashes the script (`status: "error"`) instead of
+recording a named, diffable result. `assert_distance` /
+`assert_scalar` turn those claims into first-class assertions, and
+both record their **measured value** in the JSON even on pass, so
+`khana diff` reports drift the pass/fail boolean can't see.
+A two-part `assert_distance` also records `witness_mm`, the point on
+each part it was read between, and `khana diff` prints where those
+moved. A gap that barely changed but whose points jumped is a claim
+now measuring a different pair of features — say, a guide wall you
+just added — not the one its name describes.
+
+**A part wholly inside another reads 0, not the gap between their
+skins.** The distance is surface to surface, so it is 0 for parts that
+touch or overlap; a bushing lost inside a block touches nothing, and
+still reads 0, because it is past contact. `detail` says which part is
+inside (`distance 0.0000mm below min 0.5mm; cube lies inside rod`, or
+`a solid of cube …` when only one of its solids is), on a pass under a
+bare `max_mm` too, and `witness_mm` is one point of the inner part given
+twice. Inside means inside material: a ball in a hollow shell's cavity
+is clear of it and keeps its distance to the inner wall, and nothing is
+inside a surface part, which has no material — a part enclosed by a
+closed shell reads its distance to the shell (the `not_solid` warning is
+what says the shell is not a solid). `assert_distance` does not forbid
+overlap (`min_mm=0` passes at 0 either way); that is
+`assert_no_interference` or `assert_clear_of`.
+
+Promoting a bare assert is not free, though: it **widens the claim's
+scope** from the one pose its constants came from to every pose a
+motion builds. See `SKILL.md` §What a green check does not mean.
+
+```python
+# gear mesh: close but not touching (min AND max bound)
+a = a.assert_distance("ring_gear", "pinion",
+                      min_mm=BACKLASH, max_mm=BACKLASH + 0.1)
+
+# directed gap between the projections: a's far extent to b's near
+# extent along the axis (negative once they overlap), footprints ignored.
+# It is the travel before contact when a's leading point lines up with
+# b's nearest point along the axis; otherwise that travel is longer (or
+# never ends) and the gap is a lower bound. So min_mm is safe; max_mm
+# cannot say "rests on": a saddle whose side walls hang 7 mm past a
+# rail's top reads -7 resting on it and 0 lifted 7 mm off it, so
+# min_mm=0, max_mm=0 passes the floating pose. A datum-plane target has
+# no footprint, so there the gap is the travel. Axis name or vector,
+# read as the direction FROM a TOWARD b, in this assembly's frame (it
+# turns with the unit when a parent places it rotated)
+a = a.assert_distance("pulley", "housing", along="Z", min_mm=1.0)
+
+# datum plane target (declared in this assembly's frame; `along` must
+# be parallel to the plane normal). Z-invariant claims need no sweep.
+a = a.assert_distance("ramp", Plane.XY.offset(RIM_Z), along="-Z", min_mm=5.0)
+
+# measure from an outward offset: tip circle over a modeled pitch
+# cylinder (conservative — never reports more distance than the true
+# offset body has)
+a = a.assert_distance("pinion", "rails", min_mm=1.0, grow_a_mm=ADDENDUM)
+
+# non-geometric scalar: recorded, diffable, optionally bounded
+a = a.assert_scalar("ramp_slide_margin", tan(radians(RAMP_DEG)),
+                    ge=MU_STATIC_BUDGET, detail="µ_s budget, ABS on PLA")
+```
+
+Bound comparisons carry a 1e-6 absolute tolerance, so placing or
+sizing geometry *from* the same constant you bound against (gap ==
+`MESH_BACKLASH` exactly) passes despite solver noise — no need to
+hand-pad bounds with `- 0.01` margins.
+
+Parameter-sanity checks with no geometric content (a deliberately
+loose upper bound on a width) legitimately stay bare Python asserts.
+
+## Keep-outs: clear of a volume that is not a part
+
+A driver has to reach a screw head, and a bolt has to drop into its
+seat. Metal must stay out of the zone behind a reader coil. Each of
+those volumes is a claim about the product, but none of them is a
+product part. Added with `with_part`, it would export and draw with the
+product. `assert_clear_of` takes the solid as a claim argument instead:
+
+```python
+# a Ø8 drop-in path standing on the bolt seat, the clamp's top face
+seat = Plane.XY.offset(SEAT_Z)
+corridor = Pos(SEAT_X, SEAT_Y, SEAT_Z + DRIVER_L / 2) * Cylinder(DRIVER_R, DRIVER_L)
+a = a.assert_clear_of("clamp", corridor, name="m4_drop_in", seat=seat, min_mm=0.5)
+
+# a subtree, less the part the corridor starts in (its own countersink)
+a = a.assert_clear_of("stage_1", driver, name="arc_screw",
+                      excluding=["stage_1.sector_2"])
+```
+
+**A straight-line path is `swept(body, by)`**, the exact volume a body
+passes through translating by a vector (from
+`cad_khana.mechanism.keepout`). Use it for a draw-out or drop-in
+path whose obstacles must stay clear of the moving body:
+
+```python
+from cad_khana.mechanism.keepout import swept
+
+# a basket drawn 120 mm out along +X, past every column
+path = swept(basket(), (120, 0, 0))
+a = a.assert_clear_of(columns, path, name="basket_draw_out")
+```
+
+It is exact, not sampled, so it catches an obstacle that the body
+clears at rest and at the end of its travel but crosses on the way. It
+takes planes, cylinders, cones and spheres, the faces whose outline
+OCCT computes exactly. Any other face (a torus, a B-spline) raises
+rather than return an approximate path. There, fall back to stepped
+copies of the body in a `Compound`, which is sampled. Two cautions:
+`value` is the least distance over the whole path. When the nearest
+obstacle sits beside the body at rest, that is the rest clearance, and
+the green says nothing about margin mid-travel. Also, extruding the
+body's silhouette is **not** a substitute: a slot a post stands in at
+rest is hidden in the silhouette, so that shape is red from the start.
+
+The keep-out is declared in this assembly's frame and rides its
+placement: composed into a parent, or under a joint, it moves with the
+unit that declared it. That is a datum `Plane`'s rule too.
+
+**A keep-out holds only parts of the assembly where the claim is
+declared.** When the unit that knows the keep-out's geometry is not the
+one that has every part it must clear (a driver corridor known in a
+stage builder, reaching bodies that exist only in the machine), declare
+it by name where the geometry is known, and assert it by path where the
+parts are, as an anchor is:
+
+```python
+# declared where the screw's pose is known …
+stage = stage.with_keepout("arc_screw_driver", driver)
+# … held where every body it must clear exists
+top = top.assert_clear_of(
+    ["load_ramp", "m02_chain"], "m02_chain.s1.arc_screw_driver",
+    excluding=["m02_chain.s1.sector_2"], min_mm=0.5,
+)
+```
+
+`with_keepout(name, solid, seat=None)` declares the solid in that
+unit's frame (its own namespace; no `.` in the name). The path resolves
+through the tree at every pose, composed through placements and joints,
+so the keep-out rides the stage's joint while the parts it is held
+against stay where they are. A misspelt path raises at the
+`assert_clear_of` call.
+
+**One result per call**, named `clear_of:<name>>=<min_mm>` (the path,
+for a named keep-out, unless you pass `name=`). A second call under the
+same name at one level raises, since `khana diff` matches results by
+name: in a loop over units, put the unit in the name. `value` is the least
+distance over the selected parts, 0 when one overlaps. On a pass,
+`detail` names the nearest part and how many parts were measured
+(`nearest of 357: load_ramp at 5.0000mm`); `measured` carries that
+count, so `khana diff` shows a selection that shrank. On
+a failure it lists every failing part, and only those
+(`2 of 357 parts: …`): each part's overlap volume and centroid, or its
+distance and the point nearest the keep-out. A selected part absent
+from the run skips the whole claim as `absent_part`, as any claim
+naming its parts does. **Any overlap fails, whatever `min_mm`.** The
+default of 0 allows touching, which is what `assert_distance(min_mm=0)`
+could never enforce: an overlapping pair also reads 0 there.
+
+**`seat=` keeps the headroom of a keep-out that touches a part.** A
+bolt's corridor stands on its seat, so the clamp touches it there and
+its plain distance is 0 for good. `seat` is the plane the keep-out
+stands on, normal pointing into the keep-out, in the same frame and
+composed with it. Contact at the seat is the design: the distance is
+measured from each part's material past the plane (anything within
+0.001 mm of it counts as the seat), so a collar wall 0.5 mm off the
+corridor reads 0.5, and `min_mm` is the margin. The overlap test still
+takes the whole part. A part with nothing past the seat has no
+distance; if no selected part has any, `value` is `null` and `detail`
+says so. The plane is infinite: all material on the seat's side, near
+the keep-out or not, is held only to no overlap. A seat that is not a
+plane (a countersink cone) cannot be named; exclude that part, as the
+second example does.
+
+`excluding` drops whole parts: a thin wall of the excluded part right
+beside the corridor is not held by the claim. Prefer excluding a
+**region** of the part (`excluding=["stage_1.sector_2@screw"]`), which
+drops only the material round the feature the corridor starts in and
+keeps the rest of the part held; see
+[Regions](#regions-a-claim-about-one-feature-of-a-part).
+
+**Every selected part is measured, with no bounding-box pruning.** A
+consumer's whole-machine claim of 4 corridors against 357 parts (1428
+part checks) evaluated in 7.5 s on their measurement. Under a motion,
+any selected part moving re-measures the whole claim at that pose.
+
+Where the claim is declared decides when it holds. See
+`composition.md` §Where a claim lives.
+
+## Footprint claims: within, seen along an axis
+
+`assert_distance(along=)` ignores footprints and
+`assert_no_interference` is green for a foot that has walked off its
+rail. `assert_within` holds the footprint itself: `inner` less `outer`
+swept along the axis across `inner`'s whole extent must be empty. The
+parts need not overlap, so a foot standing on a rail's top face is
+within it.
+
+```python
+# the foot rests on the rail and must not run off its +X end
+a = a.assert_within("drive_foot", "cross_rail", along="Z")
+
+# the seat ring covers the turntable ring in plan — bore included, which
+# a bounding-box comparison (or one on the ODs) would miss
+a = a.assert_within("turntable_ring", "seat_ring", along="Z")
+```
+
+Named `within:<inner>/<outer>@<axis>`. `along` is required — there is
+no default up — and is an axis name or a vector in this assembly's frame, like `assert_distance`'s, and its
+sign does not matter. `value` is the volume of `inner` outside the
+footprint, recorded on a pass too; up to 0.001 mm³ counts as within.
+A failure's `detail` gives the volume, how many pieces, and the
+largest one's centroid and bounding box — its span is how far, and
+in which direction, the part overhangs:
+`foot outside rail's footprint along (0.00, 0.00, 1.00): 72.0000mm^3 in 1 piece; largest centred at (101.50, 0.00, 12.00), spanning (100.00, -3.00, 10.00) to (103.00, 3.00, 14.00)`.
+
+The footprint is all of `outer`, at every height along the axis, so
+material below the contact covers too: a ring overhanging its seat
+passes wherever a lower saddle of the same part lies beneath it.
+Within is not *rests on*. To hold the ring to the seat alone, name the
+seat as a region and claim `assert_within("ring", "spider@seat",
+along="Z")`.
+
+The footprint is `swept()`, so `outer` must have only plane,
+cylinder, cone and sphere faces. A torus fillet or a B-spline fails
+the claim, naming the face kinds, rather than read an approximate
+footprint.
+
+## Regions: a claim about one feature of a part
+
+A claim's operands are whole parts, and what a claim is about is often
+one feature of one. A plate has to rest on *each* of four posts that
+are fused into one body, but tangent contact reads the nearest gap, so
+the whole-part claim is green on one post of four. A boss has to clear
+a corridor that its own sector spans, so the whole-part claim is red by
+construction. A driver corridor has to clear a bowl everywhere but
+round the screw it reaches, and `excluding` the bowl drops all of it.
+
+`with_region(part, name, solid)` names a region on a part: a solid in
+**the part's own frame**, the one its builder draws in (see
+`composition.md` §Regions ride their part). As a claim operand,
+`part@name` is then *the part's material inside that solid*:
+
+```python
+a = (
+    Assembly()
+    .with_part("body", body())        # a slab carrying four posts, one solid
+    .with_part("plate", Box(40, 40, 2), location=Pos(0, 0, 13))
+    .with_region("body", "post_sw", Pos(-15, -15, 7.75) * Box(6, 6, 10.5))
+    .with_region("body", "post_ne", Pos(15, 15, 7.75) * Box(6, 6, 10.5))
+)
+a = a.assert_tangent_contact("plate", "body")          # green: the nearest post touches
+a = a.assert_tangent_contact("plate", "body@post_sw")  # green: this post touches
+a = a.assert_tangent_contact("plate", "body@post_ne")  # red: this one stops 0.3 short
+```
+
+**The measuring claims take a region**, on any part operand:
+`assert_distance`, `assert_tangent_contact`, `assert_within` (as
+`inner` or `outer`) and `assert_clear_of` (in `parts`, and in
+`excluding`, below). The claims about a part pair or a whole part
+raise `ValueError` when given one — `assert_no_interference`,
+`assert_allowed_contact`, `assert_interference`, `assert_solid_count`,
+and both group forms, in their groups and in `known_overlaps=` /
+`suppressed=`.
+
+**In `excluding`, `part@region` keeps the part held and drops only the
+material inside the region**:
+
+```python
+# a 20 mm cube with a radius-1 rod through it as the keep-out; the plug
+# is the radius-3 cylinder round the rod, in the cube's frame
+b = b.with_region("box", "plug", Cylinder(3, 30))
+b = b.assert_clear_of(["box", "far"], rod, name="rod", min_mm=1,
+                      excluding=["box@plug"])
+```
+
+The whole cube overlaps the rod by 62.8 mm³. Less the plug it reads
+2.0 mm, and `measured` still counts it. Excluding `"box"` outright
+reads 48 mm, the distance to the other part: the cube is then not held
+at all. Several regions of one part
+may be excluded; each must be on a part the claim holds, or the call
+raises.
+
+**Read `detail` on a green region claim.** It ends with how much of the
+part the operand holds, on a pass too:
+
+- as an operand: `body@post_sw: 152.0000mm^3 of body's 3835.2000mm^3`
+- in `excluding`: `excluding box@plug: 7434.5133mm^3 of box's
+  8000.0000mm^3 held`
+
+A region drawn too small measures less than the feature and stays
+green, and one that has drifted onto other material measures the wrong
+place; no check can know what you meant, so the number is what tells
+you what was looked at. Compare it with the feature's volume when you
+write the claim. An excluded region that misses its part drops nothing
+and reads `8000.0000mm^3 of box's 8000.0000mm^3 held`: the whole part
+is held, which is the strict side, and the number shows the exclusion
+is doing nothing.
+
+**A region that holds nothing fails the claim**, `passed: false` and
+never a skip: `region body@miss holds no material of body: its solid
+misses the part`. A part left with nothing by its exclusions fails the
+same way: `excluding box@all leaves nothing of box to hold clear`.
+The material is cut from the geometry the run actually has, so under
+`with_detailed_geometry` the region reads the detail body, and a detail
+body that has lost the feature fails the claim.
+
+What else to know:
+
+- **One region, one claim.** There is no "every post": four posts are
+  four regions and four claims.
+- **Declare the region before the claim that reads it.** A region the
+  part does not have raises `KeyError` at the claim, naming the ones it
+  has. A part absent from the run skips the claim as `absent_part`, as
+  for any claim; if the part then arrives without the region, the claim
+  fails.
+- **Names.** A region name has no `.` and no `@`, and is unique on its
+  part; two parts may each have a `seat`. Part and sub-assembly names
+  cannot contain `@`. The auto-name carries the operand
+  (`tangent_contact:plate/body@post_ne`), so converting an auto-named
+  whole-part claim to a region claim renames it: `khana diff` shows one
+  `removed` and one `added`. A claim given its own `name=` keeps it, and
+  if its value did not move `khana diff` shows no line for it at all:
+  the narrowed operand is visible only in the new file's `detail`.
+- **Solids only.** A region is cut from material. A part with faces
+  outside any solid (the `not_solid` warning, or a solid with a stray
+  face beside it) takes no region: the claim fails with `… has faces
+  outside any solid, so a region of it would leave them out`, because
+  the cut would drop those faces and measure the part without them.
+- **Not a part.** Like a keep-out, a region is never exported, drawn,
+  pushed to the viewer or listed in `parts`.
+
+## Contact claims
+
+Two contact assertions, split by what the design intends:
+
+- **Required contact** — a tangent rest (foot-on-rail, plate-on-flange,
+  gear-on-collar) where the parts must touch. `assert_no_interference`
+  alone is a trap here: it also passes with the parts floating 3 mm
+  apart, so nothing asserts the contact *exists*. Use
+  `assert_tangent_contact` — a gap beyond `tol_mm` fails and a real
+  overlap fails. When a part must rest against a specific surface,
+  assert the tangent contact against the surface it must face; that
+  pins the orientation too. The gap is the pair's *nearest* one, so a
+  plate on four posts fused into one body passes when one post reaches
+  and three stop short. Claim each post through a region
+  (`"body@post_sw"`, §Regions) when every one must touch.
+- **Allowed contact** — a press-fit or interference fit. Model the
+  **true** interference (don't oversize a bore to appease
+  `assert_no_interference` — the model then lies about the fit) and
+  declare it with `assert_allowed_contact`. `min_overlap_mm3` makes
+  the engagement itself the claim, so the fit drifting back to a
+  clearance fit fails loudly.
+
+```python
+# tangent rest: must touch, must not overlap (tol is noise allowance)
+a = a.assert_tangent_contact("foot", "rail")
+
+# press-fit modeled at true interference. The band comes from one
+# honest run, not from arithmetic: overlap volume is interference ×
+# diameter × engagement length, so a realistic fit is single-digit mm³
+# and a guessed band is wrong by an order of magnitude.
+a = a.assert_allowed_contact("drive_pulley_shaft", "hub_shaft_stub",
+                             min_overlap_mm3=1.5, max_overlap_mm3=2.6,
+                             reason="press fit, 0.02 mm diametral on Ø8")
+```
+
+Both record a measured value in the JSON even on pass (`tangent`: the
+gap in mm; `allowed`: the overlap volume in mm³), so `khana diff` sees
+drift. A tangent pair has no overlap, so it coexists with group
+`assert_no_interference_*` checks; an allowed-contact pair genuinely
+overlaps, and group checks skip it automatically — the declaration is
+the whole of it, with no `suppressed=` entry to keep in step (see
+[Group assertions](#group-assertions)).
+
+**Contact that only happens in one phase of a motion** — a lifter pad
+against the platform it lifts, a cam against its follower — takes a
+`during=` window instead of being suppressed at every frame:
+
+```python
+from cad_khana.mechanism.assertions import JointWindow
+
+a = a.assert_allowed_contact(
+    "platform.frame", "servo_arm.arm", max_overlap_mm3=20,
+    during=JointWindow("rotor.platform", 5.4, 22.5),
+    reason="servo pad lifts the platform's drop block",
+)
+```
+
+Inside the window the overlap band applies; **outside it the pair is
+held to plain no-interference**, so the same contact appearing at rest
+fails instead of passing unnoticed. That is the whole difference
+between declaring a contact and suppressing a pair: a suppressed pair
+is blind at every frame.
+
+Window the **joint angle, not `t`**. The joint is the physical DOF, so
+re-timing the animation can't invalidate the claim — and a contact that
+recurs at several parameters (a pad touched on the way up and again on
+the way down) is usually *one* angle window even though it is two
+disjoint `t` intervals. Derive the window from geometry with
+`classify` (`motion.md` §Sweep diagnostics) rather than guessing it; if the joint is absent from
+a run, the assertion skips like an absent part.
+
+**`during=` works on every part-referencing assertion** — the
+single-pair forms and both group forms — and takes one `JointWindow` or
+a tuple that must *all* hold (a claim true only "with the platform
+level **and** the arm down" is two joints). What "outside the window"
+means follows from the kind of claim:
+
+- A **requirement** (`assert_no_interference`, `assert_distance`,
+  `assert_tangent_contact`, `assert_interference`)
+  **lapses**: `passed: null`, `skipped: "out_of_phase"`. Use it for a
+  claim that is only meant at rest — without `during=`, a claim held
+  over a motion is a claim about *every* pose of it.
+- A **permission** (`assert_allowed_contact`) lapses to the default it
+  was an exception to — no contact — **unless another contact claim on
+  the same pair is in phase there**, which then governs. Phased contact
+  claims on one pair partition the motion:
+
+```python
+a = (
+    a.assert_allowed_contact(pad, block, max_overlap_mm3=20,
+                             during=JointWindow("rotor.platform", 5.4, 22.5))
+    .assert_allowed_contact(pad, block, min_overlap_mm3=4, max_overlap_mm3=20,
+                            during=JointWindow("rotor.platform", 12.0, 18.0))
+)   # may touch in the wide window, MUST engage in the narrow one
+```
+
+The phase is part of an auto-generated name (`…@rotor.platform
+[5.4, 22.5]deg`), so claims on one pair in different phases don't
+collide.
+
+## Group assertions
+
+When "assert every pair" is the intent, say so — don't hand-write the
+double loop:
+
+| Assertion | Expands to |
+|---|---|
+| `.assert_no_interference_between(group_a, group_b, …)` | One `assert_no_interference` per cross pair `(a, b)`. |
+| `.assert_no_interference_within(group, …)` | One per unordered pair inside `group` (`i < j` in group order). |
+
+A group is an iterable of part paths, or a **dotted sub-assembly path**
+(`"turret.rotor"`) selecting every part under that subtree — expanded
+to full paths from the asserting assembly's root
+(`"turret.rotor.arm.spider"`), sorted. The two mix: a sub-assembly
+path inside the iterable expands in place. Expansion is a macro over the
+current contents — parts added afterwards aren't covered, so declare
+group assertions after composition.
+
+Both take two keyword options:
+
+- `known_overlaps=[(a, b, reason), …]` — downgrades those pairs
+  (order-independent) to `assert_interference(reason=…)` regression
+  alarms.
+- `suppressed=[(a, b), …]` — skips those pairs entirely (e.g. a
+  design-intended contact during motion with no clean per-frame
+  predicate).
+
+Pairs carrying an `assert_allowed_contact` are skipped **without being
+listed** — the contact assertion already holds the pair at every frame
+(inside its window to the overlap band, outside it to plain
+no-interference), so re-emitting `no_interference` there could only
+contradict it. Don't restate them in `suppressed=`: that is
+bookkeeping to keep in step, and it goes *wider* than the claim — a
+suppression is blind at every frame where a phased claim is not.
+Naming the pair in `known_overlaps=` overrides the skip, if you want
+the regression alarm too.
+
+The skip is resolved over the whole assembled assertion set, so the
+contact may be declared anywhere — before or after the group call, at
+this level or a nested one. Unlike group *membership*, it is not a
+macro over the state at the call, and adds no ordering rule beyond
+"after composition". A hand-written `assert_no_interference` on a
+contact pair is never skipped: that contradiction is yours to see.
+
+Expanded assertions are the plain single-pair forms with their usual
+auto-names, so migrating a hand-written loop to a group call leaves
+`mechanism.json` unchanged — provided the loop wrote each pair in the
+order the group emits it (`_between`: `group_a` side first; `_within`:
+list order; a subtree path: sorted). A name is `no_interference:a/b`, so
+a reversed pair renames the claim and `khana diff` reports it.

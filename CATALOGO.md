@@ -2,7 +2,7 @@
 
 Recursos de GitHub para que Claude trabaje mejor en diseño 3D, CAD e ingeniería. El 21/10/2026 revisé la licencia y la estructura de cada repo, y en detalle (hooks o servidores que se ejecutan solos, llamadas de red, binarios e instrucciones sospechosas) las skills que se indican debajo de cada tabla. En esas no encontré problemas; las demás no las revisé a fondo.
 
-Estos archivos **no están copiados** en este repo: se instalan desde su repo original, así cada autor mantiene su versión y su licencia. El commit revisado figura al final de cada tabla; si un repo cambió mucho después de esa fecha, conviene mirarlo antes de instalar.
+**Ya incluidas en este kit**: las skills revisadas en detalle de las tablas 1 a 3 (51 en total) están copiadas en los plugins `cad-3d-comunidad`, `fluidos-bombas-termo` y `ciencia-y-calculo`, con sus licencias y créditos. El resto de cada repo, y los de las secciones 4 a 6, se instalan desde su repo original. El commit revisado figura debajo de cada tabla; si un repo cambió mucho después de esa fecha, conviene mirarlo antes de instalar.
 
 ## 1. CAD y modelado 3D
 

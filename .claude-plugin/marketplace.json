@@ -4,14 +4,35 @@
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"
   },
-  "description": "Skills de ingeniería electromecánica y diseño 3D para Claude: planos técnicos, modelado CAD, visores 3D interactivos, informes y memorias de cálculo.",
+  "description": "Skills de ingeniería electromecánica y diseño 3D para Claude: planos técnicos, modelado CAD, visores 3D interactivos, informes, memorias de cálculo y skills de la comunidad para CAD, fluidos y cálculo científico.",
   "plugins": [
     {
       "name": "ingenieria-3d",
       "source": "./plugins/ingenieria-3d",
-      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word y memorias de cálculo.",
+      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word, memorias de cálculo y conexión con Blender y FreeCAD.",
       "category": "ingenieria",
       "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "solidworks", "autocad", "fusion-360", "blender", "iram"]
+    },
+    {
+      "name": "cad-3d-comunidad",
+      "source": "./plugins/cad-3d-comunidad",
+      "description": "Skills de la comunidad para CAD y 3D: build123d, ensambles sin interferencias, render y optimización de GLB, fabricabilidad para CNC, chapa e inyección, impresión 3D y piezas comerciales en STEP.",
+      "category": "ingenieria",
+      "tags": ["cad", "3d", "build123d", "glb", "dfm", "cnc", "impresion-3d"]
+    },
+    {
+      "name": "fluidos-bombas-termo",
+      "source": "./plugins/fluidos-bombas-termo",
+      "description": "Skills de la comunidad para bombas, NPSH, curvas H-Q, pérdidas en cañerías, propiedades termodinámicas, unidades, análisis estructural, OpenFOAM y SolidWorks.",
+      "category": "ingenieria",
+      "tags": ["fluidos", "bombas", "termodinamica", "coolprop", "pint", "solidworks"]
+    },
+    {
+      "name": "ciencia-y-calculo",
+      "source": "./plugins/ciencia-y-calculo",
+      "description": "Skills de la comunidad para SymPy, gráficos, unidades e incertidumbre, estadística, simulación de procesos, optimización, Octave, combustión, conversión de documentos y pósters.",
+      "category": "ingenieria",
+      "tags": ["sympy", "matplotlib", "incertidumbre", "estadistica", "simulacion", "optimizacion"]
     }
   ]
 }

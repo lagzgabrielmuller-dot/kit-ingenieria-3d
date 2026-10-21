@@ -1,0 +1,13 @@
+{
+  "name": "cad-3d-comunidad",
+  "displayName": "CAD y 3D (comunidad)",
+  "description": "Skills de la comunidad para CAD y 3D: modelado con build123d, ensambles con control de interferencias, render y optimización de GLB, revisión de fabricabilidad para CNC, chapa e inyección, impresión 3D, piezas comerciales en STEP y hardware de laboratorio.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT AND Apache-2.0",
+  "keywords": ["cad", "3d", "build123d", "glb", "dfm", "cnc", "impresion-3d", "step"]
+}
