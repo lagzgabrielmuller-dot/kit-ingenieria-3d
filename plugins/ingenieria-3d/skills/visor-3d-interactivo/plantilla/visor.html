@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visor 3D</title>
+<style>
+  :root { --fondo:#11161d; --panel:rgba(22,28,37,.94); --texto:#e9eef4; --sub:#9aabbd; --acento:#4fb3ff; --borde:#2c3746; }
+  html, body { margin:0; height:100%; background:var(--fondo); color:var(--texto);
+    font:14px/1.4 system-ui, "Segoe UI", Roboto, sans-serif; overflow:hidden; }
+  #lienzo { position:fixed; inset:0; }
+  #panel { position:fixed; top:12px; left:12px; width:250px; max-height:calc(100% - 24px); overflow:auto;
+    background:var(--panel); border:1px solid var(--borde); border-radius:10px; padding:12px 14px; }
+  #panel h1 { font-size:16px; margin:0 0 2px; }
+  #panel p { color:var(--sub); font-size:12px; margin:0 0 8px; }
+  #panel h2 { font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--sub); margin:12px 0 4px; }
+  .fila { display:flex; align-items:center; gap:6px; padding:2px 0; }
+  .fila label { flex:1; cursor:pointer; }
+  button { background:#1d2734; color:var(--texto); border:1px solid var(--borde); border-radius:6px;
+    padding:4px 8px; margin:2px 3px 2px 0; font:inherit; font-size:12px; cursor:pointer; }
+  button:hover, button.activo { border-color:var(--acento); }
+  .solo { padding:1px 6px; font-size:11px; }
+  #info { position:fixed; right:12px; bottom:12px; max-width:320px; background:var(--panel);
+    border:1px solid var(--borde); border-radius:10px; padding:10px 12px; display:none; white-space:pre-line; }
+  #abrir { position:fixed; top:12px; left:12px; display:none; }
+  .etiqueta { background:rgba(10,14,20,.82); color:#fff; padding:2px 6px; border-radius:4px; font-size:11px;
+    white-space:nowrap; pointer-events:none; }
+  @media (max-width:640px) { #panel { width:auto; right:12px; max-height:42%; } }
+</style>
+<!-- three.js desde CDN. Para usarlo sin internet: copiar three.module.js y la carpeta
+     examples/jsm a ./lib y cambiar estas dos rutas por "./lib/three.module.js" y "./lib/jsm/". -->
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="lienzo"></div>
+<div id="panel">
+  <h1 id="titulo"></h1><p id="subtitulo"></p>
+  <h2>Capas</h2><div id="capas"></div>
+  <h2>Vistas</h2><div id="vistas"></div>
+  <h2>Animación</h2>
+  <div><button id="pausa">Pausar</button><button id="velocidad">Velocidad ×1</button></div>
+  <h2>Herramientas</h2>
+  <div><button id="etiquetas" class="activo">Etiquetas</button><button id="captura">Captura PNG</button>
+    <button id="completa">Pantalla completa</button><button id="ocultar">Ocultar panel</button></div>
+  <p style="margin-top:10px">Arrastrar: rotar · Rueda: zoom · Clic derecho: mover · Clic en un equipo: datos</p>
+</div>
+<button id="abrir">☰ Panel</button>
+<div id="info"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+/* =====================================================================
+   1. DATOS DEL PROYECTO (editar)
+   ===================================================================== */
+const PROYECTO = {
+  titulo: 'Ejemplo: cinta transportadora',
+  subtitulo: 'Unidades en metros · reemplazar la sección 3 por el modelo real',
+};
+
+/* =====================================================================
+   2. MOTOR DEL VISOR (normalmente no hace falta tocarlo)
+   ===================================================================== */
+const contenedor = document.getElementById('lienzo');
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+contenedor.appendChild(renderer.domElement);
+
+const rotulos = new CSS2DRenderer();
+rotulos.setSize(innerWidth, innerHeight);
+Object.assign(rotulos.domElement.style, { position: 'fixed', inset: '0', pointerEvents: 'none' });
+document.body.appendChild(rotulos.domElement);
+
+const escena = new THREE.Scene();
+escena.background = new THREE.Color(0xdfe6ee);
+const camara = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.01, 5000);
+camara.position.set(8, 6, 10);
+const controles = new OrbitControls(camara, renderer.domElement);
+controles.enableDamping = true;
+
+escena.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 1.1));
+const sol = new THREE.DirectionalLight(0xffffff, 2.2);
+sol.position.set(15, 25, 10);
+sol.castShadow = true;
+sol.shadow.mapSize.set(2048, 2048);
+escena.add(sol);
+const piso = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), new THREE.MeshStandardMaterial({ color: 0xc9d1da }));
+piso.rotation.x = -Math.PI / 2; piso.receiveShadow = true; escena.add(piso);
+const grilla = new THREE.GridHelper(200, 200, 0x8a96a3, 0xb3bdc7); grilla.position.y = 0.002; escena.add(grilla);
+
+const capas = {};
+const animaciones = [];
+let reloj = 0, pausado = false, factorVel = 1;
+
+function capa(nombre, visible = true) {
+  const grupo = new THREE.Group(); grupo.name = nombre; grupo.visible = visible; escena.add(grupo);
+  capas[nombre] = grupo;
+  const fila = document.createElement('div'); fila.className = 'fila';
+  const id = 'c' + Object.keys(capas).length;
+  fila.innerHTML = `<input type="checkbox" id="${id}" ${visible ? 'checked' : ''}><label for="${id}">${nombre}</label><button class="solo">solo</button>`;
+  fila.querySelector('input').onchange = (e) => { grupo.visible = e.target.checked; };
+  fila.querySelector('.solo').onclick = () => {
+    for (const [n, g] of Object.entries(capas)) {
+      g.visible = n === nombre;
+      document.getElementById('c' + (Object.keys(capas).indexOf(n) + 1)).checked = g.visible;
+    }
+  };
+  document.getElementById('capas').appendChild(fila);
+  return grupo;
+}
+
+let viaje = null;
+function vista(nombre, posicion, objetivo = [0, 0, 0]) {
+  const b = document.createElement('button'); b.textContent = nombre;
+  b.onclick = () => { viaje = { t: 0, p0: camara.position.clone(), o0: controles.target.clone(),
+    p1: new THREE.Vector3(...posicion), o1: new THREE.Vector3(...objetivo) }; };
+  document.getElementById('vistas').appendChild(b);
+}
+
+function material(color, extra = {}) {
+  return new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.15, ...extra });
+}
+function agregar(malla, grupo, posicion = [0, 0, 0], datos = null) {
+  malla.position.set(...posicion); malla.castShadow = malla.receiveShadow = true;
+  if (datos) malla.userData.info = datos;
+  grupo.add(malla); return malla;
+}
+// caja de dimensiones [x (largo), y (alto), z (ancho)] apoyada en 'posicion' (centro de la cara inferior)
+function caja(dim, color, grupo, posicion = [0, 0, 0], datos = null) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(...dim), material(color));
+  return agregar(m, grupo, [posicion[0], posicion[1] + dim[1] / 2, posicion[2]], datos);
+}
+// cilindro de radio r y largo l; eje 'x', 'y' o 'z'; 'posicion' = centro
+function cilindro(r, l, color, grupo, posicion = [0, 0, 0], eje = 'y', datos = null) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, l, 32), material(color));
+  if (eje === 'x') m.rotation.z = Math.PI / 2;
+  if (eje === 'z') m.rotation.x = Math.PI / 2;
+  return agregar(m, grupo, posicion, datos);
+}
+// etiqueta que sigue al objeto; 'desplazamiento' en metros del mundo (y = hacia arriba)
+function etiqueta(texto, objeto, desplazamiento = [0, 0.4, 0]) {
+  const div = document.createElement('div'); div.className = 'etiqueta'; div.textContent = texto;
+  const e = new CSS2DObject(div);
+  e.position.set(...desplazamiento).applyQuaternion(objeto.quaternion.clone().invert());
+  objeto.add(e); return e;
+}
+function operario(grupo, posicion, nombre = 'Operario') {
+  const g = new THREE.Group(); g.position.set(...posicion);
+  const cuerpo = new THREE.Mesh(new THREE.CapsuleGeometry(0.22, 1.0, 6, 12), material(0x1f5fbf));
+  cuerpo.position.y = 0.72; g.add(cuerpo);
+  const cabeza = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 14), material(0xe0b48f));
+  cabeza.position.y = 1.56; g.add(cabeza);
+  const casco = new THREE.Mesh(new THREE.SphereGeometry(0.16, 20, 10, 0, Math.PI * 2, 0, Math.PI / 2), material(0xffc928));
+  casco.position.y = 1.6; g.add(casco);
+  g.traverse((o) => { o.castShadow = true; o.userData.info = `${nombre}\nPuesto de trabajo`; });
+  grupo.add(g); etiqueta(nombre, g, [0, 1.95, 0]); return g;
+}
+function animar(fn) { animaciones.push(fn); }   // fn(t, dt) se llama en cada cuadro
+async function cargarGLB(url, grupo, { escala = 1, posicion = [0, 0, 0], rotacionY = 0 } = {}) {
+  const gltf = await new GLTFLoader().loadAsync(url);   // los GLB de la skill modelado-3d-cad vienen en metros
+  gltf.scene.scale.setScalar(escala); gltf.scene.position.set(...posicion); gltf.scene.rotation.y = rotacionY;
+  gltf.scene.traverse((o) => { if (o.isMesh) { o.castShadow = o.receiveShadow = true; o.userData.info ??= o.name; } });
+  grupo.add(gltf.scene); return gltf.scene;
+}
+function encuadrar() {
+  const caja3 = new THREE.Box3();
+  for (const g of Object.values(capas)) if (g.visible) caja3.expandByObject(g);
+  if (caja3.isEmpty()) return;
+  const c = caja3.getCenter(new THREE.Vector3()), r = caja3.getSize(new THREE.Vector3()).length() / 2;
+  controles.target.copy(c);
+  camara.position.copy(c).add(new THREE.Vector3(1, 0.75, 1.15).normalize().multiplyScalar(r * 2.3));
+  camara.near = r / 200; camara.far = r * 60; camara.updateProjectionMatrix();
+  const s = sol.shadow.camera;                    // sombras que cubran todo el modelo
+  s.left = s.bottom = -r * 1.2; s.right = s.top = r * 1.2; s.near = 0.1; s.far = r * 8; s.updateProjectionMatrix();
+  sol.position.copy(c).add(new THREE.Vector3(0.6, 1, 0.4).multiplyScalar(r * 2.5));
+  sol.target.position.copy(c); escena.add(sol.target);
+}
+
+// selección: clic en un objeto con datos -> panel de información
+const rayo = new THREE.Raycaster(), puntero = new THREE.Vector2();
+let elegido = null, colorPrevio = null, abajo = null;
+renderer.domElement.addEventListener('pointerdown', (e) => { abajo = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', (e) => {
+  if (!abajo || Math.hypot(e.clientX - abajo[0], e.clientY - abajo[1]) > 4) return;  // fue arrastre
+  puntero.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+  rayo.setFromCamera(puntero, camara);
+  const toque = rayo.intersectObjects(Object.values(capas).filter((g) => g.visible), true)
+    .find((i) => i.object.userData.info);
+  if (elegido) { elegido.material.emissive.setHex(colorPrevio); elegido = null; }
+  const info = document.getElementById('info');
+  if (!toque) { info.style.display = 'none'; return; }
+  elegido = toque.object; colorPrevio = elegido.material.emissive.getHex();
+  elegido.material = elegido.material.clone(); elegido.material.emissive.setHex(0x2a5a8a);
+  info.textContent = elegido.userData.info; info.style.display = 'block';
+});
+
+document.getElementById('pausa').onclick = (e) => { pausado = !pausado; e.target.textContent = pausado ? 'Reanudar' : 'Pausar'; };
+document.getElementById('velocidad').onclick = (e) => {
+  factorVel = { 1: 2, 2: 4, 4: 0.5, 0.5: 1 }[factorVel]; e.target.textContent = `Velocidad ×${factorVel}`;
+};
+document.getElementById('etiquetas').onclick = (e) => {
+  const ver = rotulos.domElement.style.display === 'none';
+  rotulos.domElement.style.display = ver ? '' : 'none'; e.target.classList.toggle('activo', ver);
+};
+document.getElementById('captura').onclick = () => {
+  renderer.render(escena, camara);
+  const a = document.createElement('a'); a.href = renderer.domElement.toDataURL('image/png');
+  a.download = 'captura.png'; a.click();
+};
+document.getElementById('completa').onclick = () => {
+  if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen?.();
+};
+const panel = document.getElementById('panel'), abrir = document.getElementById('abrir');
+document.getElementById('ocultar').onclick = () => { panel.style.display = 'none'; abrir.style.display = 'block'; };
+abrir.onclick = () => { panel.style.display = ''; abrir.style.display = 'none'; };
+addEventListener('resize', () => {
+  camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); rotulos.setSize(innerWidth, innerHeight);
+});
+
+/* =====================================================================
+   3. ESCENA DEL PROYECTO (reemplazar por el modelo real)
+   ===================================================================== */
+const estructura = capa('Estructura');
+const cinta = capa('Cinta y rodillos');
+const motor = capa('Motor');
+const carga = capa('Carga');
+const personal = capa('Operarios');
+
+const LARGO = 6, ALTO = 0.9, ANCHO = 0.8;                       // m
+for (const x of [-2.8, -1.4, 0, 1.4, 2.8]) for (const z of [-0.45, 0.45])
+  caja([0.08, ALTO, 0.08], 0x5b6673, estructura, [x, 0, z], 'Pata de perfil cuadrado 80 × 80');
+for (const z of [-0.45, 0.45]) caja([LARGO, 0.12, 0.06], 0x4b5562, estructura, [0, ALTO, z], 'Larguero UPN 120');
+const banda = caja([LARGO, 0.02, ANCHO - 0.1], 0x222222, cinta, [0, ALTO + 0.14, 0], 'Banda de caucho 3 telas, ancho 700 mm');
+const rodillos = [];
+for (let x = -2.9; x <= 2.9; x += 0.4) rodillos.push(cilindro(0.045, ANCHO - 0.12, 0x9aa4ae, cinta, [x, ALTO + 0.09, 0], 'z', 'Rodillo Ø89 mm'));
+caja([0.3, ALTO - 0.1, 0.3], 0x5b6673, estructura, [LARGO / 2 + 0.2, 0, 0.7], 'Soporte del motorreductor');
+const m = cilindro(0.16, 0.42, 0x2f6db5, motor, [LARGO / 2 + 0.2, ALTO - 0.1 + 0.16, 0.7], 'z',
+  'Motorreductor\n2,2 kW · 4 polos · i = 25\nGuardamotor en tablero TG');
+etiqueta('M1 · 2,2 kW', m, [0, 0.35, 0]);
+const cajas = [];
+for (let i = 0; i < 5; i++) cajas.push(caja([0.35, 0.3, 0.35], 0xc98f4a, carga, [-LARGO / 2 + i * 1.3, ALTO + 0.16, 0], 'Bulto de 25 kg'));
+operario(personal, [1, 0, 1.1], 'Operario 1');
+operario(personal, [-2, 0, -1.1], 'Operario 2');
+
+const VEL = 0.5;                                                 // m/s de la banda
+animar((t, dt) => {
+  for (const r of rodillos) r.rotation.y -= (VEL / 0.045) * dt;  // giro de rodillos
+  for (const c of cajas) { c.position.x += VEL * dt; if (c.position.x > LARGO / 2) c.position.x = -LARGO / 2; }
+});
+
+vista('General', [7, 5, 8], [0, 0.8, 0]);
+vista('Frente', [0, 1.2, 9], [0, 0.8, 0]);
+vista('Planta', [0, 12, 0.01], [0, 0, 0]);
+vista('Motor', [4.6, 1.8, 2.4], [3.2, 1, 0.7]);
+
+/* =====================================================================
+   4. ARRANQUE
+   ===================================================================== */
+document.getElementById('titulo').textContent = PROYECTO.titulo;
+document.getElementById('subtitulo').textContent = PROYECTO.subtitulo;
+document.title = PROYECTO.titulo;
+encuadrar();
+let anterior = performance.now();
+renderer.setAnimationLoop((ahora) => {
+  const dtReal = Math.min((ahora - anterior) / 1000, 0.1); anterior = ahora;
+  const dt = dtReal * factorVel;
+  if (!pausado) { reloj += dt; for (const f of animaciones) f(reloj, dt); }
+  if (viaje) {
+    viaje.t = Math.min(viaje.t + dtReal / 0.8, 1);   // 0,8 s de transición
+    const k = viaje.t * viaje.t * (3 - 2 * viaje.t);
+    camara.position.lerpVectors(viaje.p0, viaje.p1, k); controles.target.lerpVectors(viaje.o0, viaje.o1, k);
+    if (viaje.t >= 1) viaje = null;
+  }
+  controles.update(); renderer.render(escena, camara); rotulos.render(escena, camara);
+});
+</script>
+</body>
+</html>

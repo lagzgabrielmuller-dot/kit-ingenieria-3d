@@ -1,0 +1,12 @@
+{
+  "name": "ingenieria-3d",
+  "displayName": "Ingeniería y diseño 3D",
+  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D interactivos, informes técnicos y memorias de cálculo electromecánico.",
+  "author": {
+    "name": "lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "keywords": ["cad", "3d", "planos", "dxf", "step", "solidworks", "autocad", "fusion-360", "blender", "three.js", "iram", "electromecanica"]
+}

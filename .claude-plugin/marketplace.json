@@ -1,0 +1,17 @@
+{
+  "name": "kit-ingenieria-3d",
+  "owner": {
+    "name": "lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "description": "Skills de ingeniería electromecánica y diseño 3D para Claude: planos técnicos, modelado CAD, visores 3D interactivos, informes y memorias de cálculo.",
+  "plugins": [
+    {
+      "name": "ingenieria-3d",
+      "source": "./plugins/ingenieria-3d",
+      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word y memorias de cálculo.",
+      "category": "ingenieria",
+      "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "solidworks", "autocad", "fusion-360", "blender", "iram"]
+    }
+  ]
+}
