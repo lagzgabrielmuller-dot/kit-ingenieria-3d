@@ -1,0 +1,20 @@
+{
+  "name": "blender-render",
+  "displayName": "Blender: modelado, render y animación",
+  "description": "Skills de la comunidad para Blender: modelado, materiales, luces, cámaras, render con Cycles y EEVEE, animación, exportación (GLB, FBX, STL, USD), texto a Blender y reconstrucción de modelos a partir de vistas ortogonales o planos.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "blender",
+    "render",
+    "materiales",
+    "animacion",
+    "glb",
+    "modelado-3d"
+  ]
+}

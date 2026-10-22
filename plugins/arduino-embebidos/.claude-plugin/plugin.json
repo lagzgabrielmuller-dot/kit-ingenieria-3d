@@ -1,0 +1,22 @@
+{
+  "name": "arduino-embebidos",
+  "displayName": "Arduino y sistemas embebidos",
+  "description": "Skills de la comunidad para Arduino, ESP32, Raspberry Pi Pico, STM32, MicroPython y Zephyr: elegir placa y pines, generar código, armar proyectos completos, depurar circuitos, buses y errores, calcular consumo y baterías, lista de materiales, OTA y filtrado de sensores.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "arduino",
+    "esp32",
+    "rp2040",
+    "stm32",
+    "micropython",
+    "platformio",
+    "embebidos",
+    "electronica"
+  ]
+}

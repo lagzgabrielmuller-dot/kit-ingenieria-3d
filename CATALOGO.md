@@ -1,8 +1,8 @@
 # Catálogo de skills y plugins de la comunidad
 
-Recursos de GitHub para que Claude trabaje mejor en diseño 3D, CAD e ingeniería. El 21/10/2026 revisé la licencia y la estructura de cada repo, y en detalle (hooks o servidores que se ejecutan solos, llamadas de red, binarios e instrucciones sospechosas) las skills que se indican debajo de cada tabla. En esas no encontré problemas; las demás no las revisé a fondo.
+Recursos de GitHub para que Claude trabaje mejor en diseño 3D, CAD, ingeniería y electrónica. El 21 y el 22/10/2026 revisé la licencia y la estructura de cada repo, y en detalle (hooks o servidores que se ejecutan solos, llamadas de red, binarios e instrucciones sospechosas) las skills que se indican en cada sección. En esas no encontré problemas, salvo lo que se aclara; las demás no las revisé a fondo.
 
-**Ya incluidas en este kit**: las skills revisadas en detalle de las tablas 1 a 3 (51 en total) están copiadas en los plugins `cad-3d-comunidad`, `fluidos-bombas-termo` y `ciencia-y-calculo`, con sus licencias y créditos. El resto de cada repo, y los de las secciones 4 a 6, se instalan desde su repo original. El commit revisado figura debajo de cada tabla; si un repo cambió mucho después de esa fecha, conviene mirarlo antes de instalar.
+**Ya incluidas en este kit**: las skills revisadas en detalle de las tablas 1 a 3 y de la sección 7 (321 en total: 51 de la primera tanda y 270 de la segunda) están copiadas en los plugins de la comunidad, con sus licencias y créditos. El resto de cada repo, y los de las secciones 4 a 6 y 8, se instalan desde su repo original. El commit revisado figura en cada sección y en el `CREDITOS.md` de cada plugin; si un repo cambió mucho después de esa fecha, conviene mirarlo antes de instalar.
 
 ## 1. CAD y modelado 3D
 
@@ -58,10 +58,47 @@ Encontrados pero no revisados: [iancanderson/openscad-agent](https://github.com/
 
 ## 6. Listas para descubrir más
 
+[skills.sh](https://skills.sh) (ranking de skills por instalaciones; con el plugin `investigacion-web`, Claude busca ahí con `npx skills find`) ·
 [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) (más de 1000 skills) ·
 [BehiSecc/awesome-claude-skills](https://github.com/BehiSecc/awesome-claude-skills) ·
 [GetBindu/awesome-claude-code-and-skills](https://github.com/GetBindu/awesome-claude-code-and-skills) ·
 [alirezarezvani/claude-skills](https://github.com/alirezarezvani/claude-skills) (380 skills, sobre todo de software y negocios).
+
+## 7. Segunda tanda: copiadas en plugins nuevos (22/10/2026)
+
+| Repo | Licencia | Commit | Qué se copió y adónde |
+|---|---|---|---|
+| [wedsamuel1230/arduino-skills](https://github.com/wedsamuel1230/arduino-skills) | MIT | `869710e` | Las 43 skills con sus carpetas `docs`, `references`, `scripts` y `tests` → `arduino-embebidos` |
+| [aklofas/kicad-happy](https://github.com/aklofas/kicad-happy) | MIT | `6a91aaa` | Las 11 skills (KiCad, SPICE, EMC, hojas de datos, distribuidores, fabricación) → `kicad-electronica` |
+| [o2scale/electronics-agent-kit](https://github.com/o2scale/electronics-agent-kit) | MIT | `705ba32` | kicad-cli, kicad-file-format, platformio → `kicad-electronica` |
+| [alivirgo/Major-AI-Skills](https://github.com/alivirgo/Major-AI-Skills) | MIT | `17fb963` | 14 guías de programas: LTspice y Altium (`kicad-electronica`); TIA Portal, CODESYS, Studio 5000, LabVIEW y OpenCV (`automatizacion-industrial`); SolidWorks, Fusion 360, CATIA, NX y Rhino (`cad-3d-comunidad`); FFmpeg y Remotion (`manim-animaciones`) |
+| [arpitg1304/robotics-agent-skills](https://github.com/arpitg1304/robotics-agent-skills) | Apache-2.0 | `f9bc546` | Las 10 skills de ROS y robótica → `automatizacion-industrial` |
+| [roble3/cc-blender-skill](https://github.com/roble3/cc-blender-skill) | MIT | `a2634b5` | 29 de las 30 skills del plugin (todas menos `mascot-logo-reconstruction`) → `blender-render` |
+| [Impertio-Studio/Blender-Bonsai-ifcOpenshell-Sverchok-Claude-Skill-Package](https://github.com/Impertio-Studio/Blender-Bonsai-ifcOpenshell-Sverchok-Claude-Skill-Package) | MIT | `dc56112` | Las 73 skills → `blender-bim-sverchok` |
+| [heshamfs/materials-simulation-skills](https://github.com/heshamfs/materials-simulation-skills) | Apache-2.0 | `7750559` | 17 de 24 (métodos numéricos, flujo de simulación, verificación y diagnóstico) → `simulacion-numerica` |
+| [obra/superpowers](https://github.com/obra/superpowers) | MIT | `2ce8aa1` | 12 de 15 skills (sin `using-superpowers`, `diagnosing-superpowers` ni `writing-skills`) → `superpowers` |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | MIT | `5beb35b` | Las 27 skills de su plugin oficial → `mattpocock-skills` |
+| [adithya-s-k/manim_skill](https://github.com/adithya-s-k/manim_skill) y [yusuke710/manim-skill](https://github.com/yusuke710/manim-skill) | MIT | `cef0450`, `a0048d9` | 4 skills de Manim → `manim-animaciones` |
+| [vercel-labs/skills](https://github.com/vercel-labs/skills) | MIT | `a80e4c9` | `find-skills` → `investigacion-web` |
+| [daymade/claude-code-skills](https://github.com/daymade/claude-code-skills) | MIT | `1edbe0b` | fact-checker y deep-research (`investigacion-web`); excalidraw-use, photo-to-scanned-pdf, pdf-to-html y excel-automation (`diagramas-y-documentos`) |
+| [mitsuhiko/agent-stuff](https://github.com/mitsuhiko/agent-stuff) | Apache-2.0 | `0865c84` | summarize (`investigacion-web`) y openscad (`cad-3d-comunidad`) |
+| [bahayonghang/drawio-skills](https://github.com/bahayonghang/drawio-skills) | MIT | `2aa612e` | drawio y drawio-academic-skills → `diagramas-y-documentos` |
+| [K-Dense-AI/claude-scientific-skills](https://github.com/K-Dense-AI/claude-scientific-skills) y [Soljourner/claude-engineering-skills](https://github.com/Soljourner/claude-engineering-skills) | MIT | `593377b`, `1c3340b` | 14 skills más de datos y redacción científica (`ciencia-y-calculo`); ANSYS y COMSOL (`fluidos-bombas-termo`) |
+
+Todas se revisaron en detalle. Avisos: las de distribuidores de `kicad-electronica` y algunas de investigación necesitan claves de API gratuitas o pagas; en `drawio`, un archivo de referencia pide actualizar la carpeta con `git pull` sin avisar, lo que instalado como plugin no hace nada (detalle en su `CREDITOS.md`).
+
+## 8. Encontrados en la segunda tanda y no copiados
+
+| Repo | Licencia | Por qué no se copió |
+|---|---|---|
+| [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) (`agent-skill/`) | BSD-3-Clause | Skill oficial de la biblioteca de scraping del video. Está pensada, entre otras cosas, para saltear protecciones anti-bots (Cloudflare Turnstile) de los sitios, así que no la sumé al kit. Quien la quiera la instala desde su repo, respetando los términos de cada sitio y sin juntar datos personales |
+| [tdimino/claude-code-minoan](https://github.com/tdimino/claude-code-minoan) | MIT | 99 skills (Firecrawl, Exa, investigación académica, diseño). Sus scripts suponen que están instaladas en `~/.claude/skills/` y varias usan servicios pagos; mejor instalarlas desde su repo. Firecrawl y Exa necesitan clave de API |
+| [remotion-dev/skills](https://github.com/remotion-dev/skills) | Licencia de Remotion | No es una licencia abierta estándar. Se instala con `npx skills add remotion-dev/skills` (gratis para personas y empresas chicas) |
+| [l3wi/claude-eda](https://github.com/l3wi/claude-eda), [adamlipecz/esp32-firmware-engineer-skill](https://github.com/adamlipecz/esp32-firmware-engineer-skill) | Sin licencia | Solo para mirar o instalar desde su repo |
+| [ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills) | Sin licencia en la raíz | Más de 800 skills, casi todas de integraciones que necesitan cuenta de Composio |
+| [kalshamsi/power-engineer-skills](https://github.com/kalshamsi/power-engineer-skills) | MIT | A pesar del nombre no es de ingeniería eléctrica: instala paquetes de skills y trae hooks |
+| [alivirgo/Major-AI-Skills](https://github.com/alivirgo/Major-AI-Skills) (resto) | MIT | Más de 450 guías de programas y hábitos de uso de IA; copié solo las 14 de ingeniería y video |
+| [travisjneuman/.claude](https://github.com/travisjneuman/.claude), [daymade/claude-code-skills](https://github.com/daymade/claude-code-skills) (resto), [fradser/dotclaude](https://github.com/fradser/dotclaude) | MIT | Colecciones grandes (181, 120 y 108 skills) sobre todo de programación, negocios y macOS. `fradser/dotclaude` trae además `use-kicad-cli` y `use-openscad`, ya cubiertas por el kit |
 
 ## Antes de instalar algo nuevo
 

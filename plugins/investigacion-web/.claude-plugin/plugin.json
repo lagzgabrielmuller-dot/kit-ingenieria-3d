@@ -1,0 +1,19 @@
+{
+  "name": "investigacion-web",
+  "displayName": "Investigación y búsqueda de skills",
+  "description": "Skills de la comunidad para investigar: buscar e instalar más skills desde skills.sh (find-skills), informes de investigación con fuentes, verificación de datos en documentos y resumen de páginas o archivos convertidos a Markdown.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "Apache-2.0 AND MIT",
+  "keywords": [
+    "investigacion",
+    "skills-sh",
+    "find-skills",
+    "fact-check",
+    "resumen"
+  ]
+}

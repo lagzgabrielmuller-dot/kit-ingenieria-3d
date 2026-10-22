@@ -4,35 +4,112 @@
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"
   },
-  "description": "Skills de ingeniería electromecánica y diseño 3D para Claude: planos técnicos, modelado CAD, visores 3D interactivos, informes, memorias de cálculo y skills de la comunidad para CAD, fluidos y cálculo científico.",
+  "description": "Skills para Claude de electromecánica, diseño 3D y electrónica: planos técnicos, modelado CAD, Blender, visores 3D, informes, memorias de cálculo, fluidos y bombas, Arduino, KiCad, PLC y robótica, simulación numérica, ciencia de datos, animaciones con Manim, diagramas, investigación y métodos de trabajo. Propias y de la comunidad, con sus licencias y créditos.",
   "plugins": [
     {
       "name": "ingenieria-3d",
       "source": "./plugins/ingenieria-3d",
-      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word, memorias de cálculo y conexión con Blender y FreeCAD.",
+      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word, memorias de cálculo, conexión con Blender y FreeCAD y consultas a Codex (ChatGPT).",
       "category": "ingenieria",
       "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "solidworks", "autocad", "fusion-360", "blender", "iram"]
     },
     {
       "name": "cad-3d-comunidad",
       "source": "./plugins/cad-3d-comunidad",
-      "description": "Skills de la comunidad para CAD y 3D: build123d, ensambles sin interferencias, render y optimización de GLB, fabricabilidad para CNC, chapa e inyección, impresión 3D y piezas comerciales en STEP.",
+      "description": "Skills de la comunidad para CAD y 3D: build123d, ensambles sin interferencias, render y optimización de GLB, fabricabilidad para CNC, chapa e inyección, impresión 3D, piezas comerciales en STEP, OpenSCAD y guías para automatizar SolidWorks, Fusion 360, CATIA, NX y Rhino.",
       "category": "ingenieria",
-      "tags": ["cad", "3d", "build123d", "glb", "dfm", "cnc", "impresion-3d"]
+      "tags": ["cad", "3d", "build123d", "glb", "dfm", "cnc", "impresion-3d", "openscad", "solidworks"]
     },
     {
       "name": "fluidos-bombas-termo",
       "source": "./plugins/fluidos-bombas-termo",
-      "description": "Skills de la comunidad para bombas, NPSH, curvas H-Q, pérdidas en cañerías, propiedades termodinámicas, unidades, análisis estructural, OpenFOAM y SolidWorks.",
+      "description": "Skills de la comunidad para bombas, NPSH, curvas H-Q, pérdidas en cañerías, propiedades termodinámicas, unidades, análisis estructural, OpenFOAM, ANSYS Fluent, COMSOL y SolidWorks.",
       "category": "ingenieria",
-      "tags": ["fluidos", "bombas", "termodinamica", "coolprop", "pint", "solidworks"]
+      "tags": ["fluidos", "bombas", "termodinamica", "coolprop", "pint", "ansys", "comsol"]
     },
     {
       "name": "ciencia-y-calculo",
       "source": "./plugins/ciencia-y-calculo",
-      "description": "Skills de la comunidad para SymPy, gráficos, unidades e incertidumbre, estadística, simulación de procesos, optimización, Octave, combustión, conversión de documentos y pósters.",
-      "category": "ingenieria",
-      "tags": ["sympy", "matplotlib", "incertidumbre", "estadistica", "simulacion", "optimizacion"]
+      "description": "Skills de la comunidad para SymPy, gráficos, unidades e incertidumbre, estadística, análisis de datos, aprendizaje automático, grafos, simulación de procesos, optimización, Octave, combustión, redacción técnica, bibliografía y pósters.",
+      "category": "ciencia",
+      "tags": ["sympy", "matplotlib", "incertidumbre", "estadistica", "datos", "bibliografia", "optimizacion"]
+    },
+    {
+      "name": "simulacion-numerica",
+      "source": "./plugins/simulacion-numerica",
+      "description": "Skills de la comunidad para simulaciones: convergencia, estabilidad (CFL), diferencias finitas, solvers lineales y no lineales, integración de ODE, mallas, optimización de parámetros, posprocesamiento, validación y diagnóstico de fallas.",
+      "category": "ciencia",
+      "tags": ["simulacion", "metodos-numericos", "convergencia", "solvers", "fem", "cfd"]
+    },
+    {
+      "name": "arduino-embebidos",
+      "source": "./plugins/arduino-embebidos",
+      "description": "43 skills de la comunidad para Arduino, ESP32, Raspberry Pi Pico, STM32, MicroPython y Zephyr: placas y pines, código, proyectos completos, depuración de circuitos y buses, consumo y baterías, lista de materiales, OTA y sensores.",
+      "category": "electronica",
+      "tags": ["arduino", "esp32", "rp2040", "stm32", "micropython", "platformio", "embebidos"]
+    },
+    {
+      "name": "kicad-electronica",
+      "source": "./plugins/kicad-electronica",
+      "description": "Skills de la comunidad para electrónica: revisión de esquemáticos y placas de KiCad, SPICE y LTspice, prechequeo de EMC, hojas de datos, lista de materiales y compra en distribuidores, fabricación en JLCPCB y PCBWay, Altium y PlatformIO.",
+      "category": "electronica",
+      "tags": ["kicad", "pcb", "spice", "ltspice", "emc", "bom", "jlcpcb"]
+    },
+    {
+      "name": "automatizacion-industrial",
+      "source": "./plugins/automatizacion-industrial",
+      "description": "Skills de la comunidad para PLC y robótica: TIA Portal, CODESYS (IEC 61131-3), Studio 5000, LabVIEW, OpenCV y ROS 1 y ROS 2.",
+      "category": "automatizacion",
+      "tags": ["plc", "tia-portal", "codesys", "iec-61131-3", "labview", "ros2", "robotica"]
+    },
+    {
+      "name": "blender-render",
+      "source": "./plugins/blender-render",
+      "description": "Skills de la comunidad para Blender: modelado, materiales, luces, cámaras, render, animación, exportación y reconstrucción de modelos a partir de vistas ortogonales o planos.",
+      "category": "3d",
+      "tags": ["blender", "render", "materiales", "animacion", "glb"]
+    },
+    {
+      "name": "blender-bim-sverchok",
+      "source": "./plugins/blender-bim-sverchok",
+      "description": "73 skills de la comunidad para programar Blender con bpy, BIM con Bonsai e IfcOpenShell (IFC, instalaciones MEP, cómputos, planos) y diseño paramétrico con Sverchok.",
+      "category": "3d",
+      "tags": ["blender", "bpy", "bim", "ifc", "bonsai", "sverchok"]
+    },
+    {
+      "name": "manim-animaciones",
+      "source": "./plugins/manim-animaciones",
+      "description": "Skills de la comunidad para animaciones explicativas con Manim (con voz en off y subtítulos opcionales), edición de video con FFmpeg y videos con Remotion.",
+      "category": "video",
+      "tags": ["manim", "animacion", "video", "ffmpeg", "remotion"]
+    },
+    {
+      "name": "diagramas-y-documentos",
+      "source": "./plugins/diagramas-y-documentos",
+      "description": "Skills de la comunidad para diagramas en draw.io y Excalidraw, fotos de hojas a PDF tipo escaneado, PDF a HTML y planillas de Excel.",
+      "category": "documentos",
+      "tags": ["drawio", "diagramas", "excalidraw", "pdf", "excel"]
+    },
+    {
+      "name": "investigacion-web",
+      "source": "./plugins/investigacion-web",
+      "description": "Skills de la comunidad para buscar e instalar más skills desde skills.sh (find-skills), informes de investigación con fuentes, verificación de datos y resúmenes de páginas o archivos.",
+      "category": "investigacion",
+      "tags": ["investigacion", "skills-sh", "find-skills", "fact-check"]
+    },
+    {
+      "name": "superpowers",
+      "source": "./plugins/superpowers",
+      "description": "Método de trabajo para programar (obra/superpowers): ideas antes de construir, planes, ejecución con subagentes, depuración sistemática, TDD, revisión de código y verificación. Hace que Claude pregunte y planifique más.",
+      "category": "programacion",
+      "tags": ["superpowers", "tdd", "debugging", "planificacion", "code-review"]
+    },
+    {
+      "name": "mattpocock-skills",
+      "source": "./plugins/mattpocock-skills",
+      "description": "Skills de Matt Pocock: grill-me, teach, research, prototipos, especificaciones y tickets, TDD, diagnóstico de bugs, diseño de módulos, revisión de código y traspaso de trabajo.",
+      "category": "programacion",
+      "tags": ["grill-me", "teach", "tdd", "especificacion", "productividad"]
     }
   ]
 }

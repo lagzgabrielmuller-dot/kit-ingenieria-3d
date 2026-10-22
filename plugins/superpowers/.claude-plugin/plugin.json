@@ -1,0 +1,20 @@
+{
+  "name": "superpowers",
+  "displayName": "Superpowers: método de trabajo para programar",
+  "description": "Las skills de superpowers (Jesse Vincent): lluvia de ideas antes de construir, planes de implementación, ejecución paso a paso o con subagentes, depuración sistemática, desarrollo guiado por pruebas, revisión de código y verificación antes de dar algo por terminado.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "superpowers",
+    "tdd",
+    "debugging",
+    "planificacion",
+    "code-review",
+    "metodo"
+  ]
+}

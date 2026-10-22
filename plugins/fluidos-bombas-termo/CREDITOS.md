@@ -1,6 +1,6 @@
 # Créditos: fluidos, bombas y termodinámica (comunidad)
 
-29 skills de [Soljourner/claude-engineering-skills](https://github.com/Soljourner/claude-engineering-skills), licencia MIT (texto completo en `licencias/claude-engineering-skills-MIT.txt`), copiadas del commit `1c3340ba171b475fb0ecd7b1699e41dac6acd986`.
+31 skills de [Soljourner/claude-engineering-skills](https://github.com/Soljourner/claude-engineering-skills), licencia MIT (texto completo en `licencias/claude-engineering-skills-MIT.txt`), copiadas del commit `1c3340ba171b475fb0ecd7b1699e41dac6acd986`.
 
 ## Cambios respecto del original
 
@@ -18,13 +18,17 @@ El contenido de los archivos no se modificó. Solo cambió la ubicación: en el 
 
 Las demás conservan su nombre: de `helpers/` (fluid-property-calculator, engineering-context-init, pump-selection-helper, unit-converter, error-handler-fluids), de `packages/` (numpy-numerics, scipy-optimization, pyvista-visualization, networkx-flow-networks, thermo-package, pint-units, fluids-package), de `integrations/` (solidworks-cad, openfoam-cfd), de `thinking/pump-design/` (cavitation-analysis, positive-displacement-pumps) y de `databases/` (coolprop-db, hydraulic-components-db, material-properties-db, cavitation-risk-db, pump-performance-db, turbulence-models-db).
 
-No se copiaron: ANSYS, COMSOL y NIST REFPROP (programas pagos), NASA Earthdata (aeroespacial), get-available-resources, sympy-symbolic y matplotlib-visualization (estas dos ya están cubiertas por el plugin ciencia-y-calculo).
+Después se sumaron, de `integrations/`, `ansys-simulation` (ANSYS Fluent por Python y archivos journal) y `comsol-multiphysics` (interacción fluido-estructura, por ejemplo vibraciones de bombas), para usar con las licencias de la escuela, la facultad o una empresa.
+
+No se copiaron: NIST REFPROP (programa pago y muy específico), NASA Earthdata (aeroespacial), get-available-resources, sympy-symbolic y matplotlib-visualization (estas dos ya están cubiertas por el plugin ciencia-y-calculo).
 
 ## Qué necesitan
 
 - Python: `pip install fluids thermo CoolProp pint numpy scipy matplotlib networkx pyvista`.
 - `solidworks-cad`: SolidWorks instalado en Windows.
 - `openfoam-cfd`: OpenFOAM (en Linux o WSL).
+- `ansys-simulation`: ANSYS Fluent con licencia y PyAnsys (`pip install ansys-fluent-core`).
+- `comsol-multiphysics`: COMSOL con LiveLink for MATLAB, o el paquete de Python MPh.
 
 ## Revisión
 

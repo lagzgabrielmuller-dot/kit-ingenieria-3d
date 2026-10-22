@@ -1,0 +1,20 @@
+{
+  "name": "manim-animaciones",
+  "displayName": "Animaciones y video (Manim, FFmpeg, Remotion)",
+  "description": "Skills de la comunidad para animaciones explicativas al estilo 3Blue1Brown con Manim (Community y ManimGL), con guion, voz en off y subtítulos opcionales, más guías de FFmpeg para editar y comprimir video y de Remotion para videos con React.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "manim",
+    "animacion",
+    "video",
+    "ffmpeg",
+    "remotion",
+    "presentaciones"
+  ]
+}

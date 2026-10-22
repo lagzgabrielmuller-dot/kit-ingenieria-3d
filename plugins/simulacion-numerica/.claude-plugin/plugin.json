@@ -1,0 +1,40 @@
+{
+  "name": "simulacion-numerica",
+  "displayName": "Simulación numérica",
+  "description": "Skills de la comunidad para simulaciones: convergencia de malla y paso de tiempo, estabilidad (CFL, von Neumann), esquemas de diferencias finitas, solvers lineales y no lineales, integración de ODE, generación de malla, optimización de parámetros, posprocesamiento, validación y diagnóstico de fallas.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "Apache-2.0",
+  "keywords": [
+    "simulacion",
+    "metodos-numericos",
+    "convergencia",
+    "cfl",
+    "solvers",
+    "fem",
+    "cfd"
+  ],
+  "skills": [
+    "./skills/core-numerical/convergence-study",
+    "./skills/core-numerical/differentiation-schemes",
+    "./skills/core-numerical/linear-solvers",
+    "./skills/core-numerical/mesh-generation",
+    "./skills/core-numerical/nonlinear-solvers",
+    "./skills/core-numerical/numerical-integration",
+    "./skills/core-numerical/numerical-stability",
+    "./skills/core-numerical/time-stepping",
+    "./skills/robustness/simulation-failure-triage",
+    "./skills/simulation-workflow/md-analysis-planner",
+    "./skills/simulation-workflow/parameter-optimization",
+    "./skills/simulation-workflow/performance-profiling",
+    "./skills/simulation-workflow/post-processing",
+    "./skills/simulation-workflow/simulation-orchestrator",
+    "./skills/simulation-workflow/simulation-validator",
+    "./skills/simulation-workflow/workflow-engine-mapper",
+    "./skills/verification-validation/benchmark-and-mms-planner"
+  ]
+}

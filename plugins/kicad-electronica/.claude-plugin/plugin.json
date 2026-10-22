@@ -1,0 +1,22 @@
+{
+  "name": "kicad-electronica",
+  "displayName": "Electrónica y PCB con KiCad",
+  "description": "Skills de la comunidad para electrónica: revisar esquemáticos y placas de KiCad, simular con SPICE y LTspice, prechequeo de EMC, extraer datos de hojas de datos, lista de materiales y compra en DigiKey, Mouser, LCSC y element14, fabricación en JLCPCB y PCBWay, kicad-cli, Altium y PlatformIO.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "kicad",
+    "pcb",
+    "spice",
+    "ltspice",
+    "emc",
+    "bom",
+    "electronica",
+    "jlcpcb"
+  ]
+}

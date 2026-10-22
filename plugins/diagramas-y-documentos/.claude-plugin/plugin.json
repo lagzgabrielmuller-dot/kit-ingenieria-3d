@@ -1,0 +1,20 @@
+{
+  "name": "diagramas-y-documentos",
+  "displayName": "Diagramas y documentos",
+  "description": "Skills de la comunidad para diagramas en draw.io (flujos, redes, UML, diagramas para informes y papers) y Excalidraw, pasar fotos de hojas a un PDF tipo escaneado, convertir PDF a HTML y automatizar planillas de Excel.",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "MIT",
+  "keywords": [
+    "drawio",
+    "diagramas",
+    "excalidraw",
+    "pdf",
+    "excel",
+    "escaneo"
+  ]
+}

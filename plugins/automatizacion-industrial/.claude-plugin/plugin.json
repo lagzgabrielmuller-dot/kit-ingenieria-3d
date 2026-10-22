@@ -1,0 +1,22 @@
+{
+  "name": "automatizacion-industrial",
+  "displayName": "Automatización industrial y robótica",
+  "description": "Skills de la comunidad para PLC y robótica: TIA Portal (SCL y Openness), CODESYS (texto estructurado IEC 61131-3), Studio 5000, LabVIEW, visión con OpenCV y ROS 1 y ROS 2 (puesta en marcha, percepción, pruebas, seguridad y web).",
+  "author": {
+    "name": "Varios autores (ver CREDITOS.md), recopilado por lagzgabrielmuller-dot",
+    "url": "https://github.com/lagzgabrielmuller-dot"
+  },
+  "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
+  "license": "Apache-2.0 AND MIT",
+  "keywords": [
+    "plc",
+    "tia-portal",
+    "codesys",
+    "iec-61131-3",
+    "labview",
+    "ros2",
+    "robotica",
+    "automatizacion"
+  ]
+}
