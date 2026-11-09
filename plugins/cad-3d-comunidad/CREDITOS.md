@@ -24,4 +24,6 @@ Skills escritas por otras personas y copiadas **sin modificaciones** desde sus r
 
 ## Revisión
 
-Antes de copiarlas revisé licencia, estructura, scripts, llamadas de red, binarios e instrucciones sospechosas, sin encontrar problemas. Los scripts de estas skills no se ejecutaron durante la revisión. Si un autor publica una versión nueva, se puede volver a copiar y actualizar el commit de esta tabla.
+Antes de copiarlas revisé licencia, estructura, scripts, llamadas de red, binarios e instrucciones sospechosas, sin encontrar problemas.
+
+**Única modificación (08/11/2026):** en `build123d`, `model-compare`, `render-glb`, `gltf-transform` y `cad-khana` la `description` del encabezado va ahora entre comillas. El texto es el mismo; sin comillas, los dos puntos que tiene adentro ("Triggers on: …", "Build123d: …") hacen que el YAML no sea válido y un lector estricto podía no cargar la skill. Lo revisa `scripts/validar_kit.py`. Los scripts de estas skills no se ejecutaron durante la revisión. Si un autor publica una versión nueva, se puede volver a copiar y actualizar el commit de esta tabla.

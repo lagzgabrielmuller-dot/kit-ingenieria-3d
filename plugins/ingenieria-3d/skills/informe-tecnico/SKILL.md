@@ -44,6 +44,7 @@ Para un protocolo de visita técnica: datos de la empresa, proceso observado, eq
 1. Convertir a PDF (`soffice --headless --convert-to pdf informe.docx`) y mirar todas las páginas: sin páginas en blanco, tablas que no se salgan del margen, figuras legibles, títulos que no queden solos al final de una página.
 2. El índice tiene que tener los títulos y números de página reales. Si queda vacío en el PDF, actualizar los campos o armarlo a partir del PDF renderizado.
 3. Recorrer la consigna punto por punto y confirmar que todo está.
-4. Si se pidió una exposición oral: armar además un guion por integrante y una lista de preguntas probables con su respuesta.
+4. Si se pidió una exposición oral: armar además un guion por integrante y una lista de preguntas probables con su respuesta (skill **exposicion-oral**).
+5. Para un trabajo importante, control independiente antes de entregar (skill **revision-tecnica**).
 
 Si piden corregir un informe que ya existe, editar ese archivo manteniendo su formato y decir qué se cambió.

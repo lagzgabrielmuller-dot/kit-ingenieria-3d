@@ -4,14 +4,14 @@
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"
   },
-  "description": "Skills para Claude de electromecánica, diseño 3D y electrónica: planos técnicos, modelado CAD, Blender, visores 3D, informes, memorias de cálculo, fluidos y bombas, Arduino, KiCad, PLC y robótica, simulación numérica, ciencia de datos, animaciones con Manim, diagramas, investigación y métodos de trabajo. Propias y de la comunidad, con sus licencias y créditos.",
+  "description": "Skills para Claude de electromecánica, diseño 3D y electrónica: planos técnicos, modelado CAD, Blender, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales y revisión técnica, fluidos y bombas, Arduino, KiCad, PLC y robótica, simulación numérica, ciencia de datos, animaciones con Manim, diagramas, investigación y métodos de trabajo. Propias y de la comunidad, con sus licencias y créditos.",
   "plugins": [
     {
       "name": "ingenieria-3d",
       "source": "./plugins/ingenieria-3d",
-      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos en Word, memorias de cálculo, conexión con Blender y FreeCAD y consultas a Codex (ChatGPT).",
+      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas (AEA, IRAM, higiene y seguridad), neumática y electroneumática, programación CNC, simuladores sin internet, exposiciones orales, revisión técnica independiente, conexión con Blender y FreeCAD y consultas a Codex (ChatGPT).",
       "category": "ingenieria",
-      "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "solidworks", "autocad", "fusion-360", "blender", "iram"]
+      "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "maquinas-electricas", "ensayos", "normas", "neumatica", "cnc", "simuladores", "exposicion", "revision", "solidworks", "autocad", "fusion-360", "blender", "iram"]
     },
     {
       "name": "cad-3d-comunidad",

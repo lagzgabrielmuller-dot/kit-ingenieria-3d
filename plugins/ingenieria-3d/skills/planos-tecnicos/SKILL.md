@@ -43,8 +43,9 @@ unir_pdfs(["salida/P01.pdf", "salida/P02.pdf"], "salida/Planos_completos.pdf")
 - Líneas: IRAM 4502 (tabla de capas abajo); relación gruesa:fina ≈ 2:1.
 - Escalas: IRAM 4505. Reducción 1:2, 1:5, 1:10, 1:20, 1:50, 1:100, 1:200, 1:500; ampliación 2:1, 5:1, 10:1.
 - Vistas: método ISO E (europeo, IRAM 4501). La planta va **debajo** del frente y la vista lateral izquierda **a la derecha** del frente.
-- Cortes y secciones: IRAM 4507; rayado fino a 45°. Grafismos normalizados: IRAM 4509.
-- Acotación: IRAM 4513 (mecánica) e IRAM 4511 (construcciones civiles). En mecánica, cotas en mm sin unidad; en edificios, la unidad que use la cátedra.
+- Cortes y secciones: IRAM 4502-40; rayados: IRAM 4502-50 (rayado fino a 45°). Algunos apuntes citan IRAM 4507: verificar en el catálogo si sigue vigente.
+- Acotación: IRAM 4513 (mecánica); tolerancias: IRAM 4550 y 4515; terminado superficial: IRAM 4517; soldadura: IRAM 4536. En mecánica, cotas en mm sin unidad; en edificios, la unidad que use la cátedra.
+- Rótulo y lista de materiales: IRAM 4508. Mapa completo de la serie IRAM 4500, con títulos: skill **normas-tecnicas-ar** (`references/dibujo-tecnico-iram.md`).
 - Esquemas eléctricos con símbolos IEC 60617; neumáticos e hidráulicos con ISO 1219.
 - Si la consigna o la cátedra dan su propio rótulo, márgenes o escalas, mandan esos.
 

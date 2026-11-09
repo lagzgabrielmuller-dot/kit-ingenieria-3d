@@ -1,6 +1,6 @@
 # Kit de ingeniería y diseño 3D para Claude
 
-Marketplace de plugins con **328 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
+Marketplace de plugins con **336 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
 
 Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comunidad, copiadas sin cambios desde sus repos con sus licencias y créditos (cada plugin tiene su `CREDITOS.md` y su carpeta `licencias/`).
 
@@ -8,7 +8,7 @@ Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comuni
 
 | Plugin | Skills | Para qué sirve |
 |---|---:|---|
-| `ingenieria-3d` | 7 | **Propio.** Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360 y Blender, visores 3D, informes, memorias de cálculo, conexión con Blender y FreeCAD y consultas a Codex (ChatGPT) |
+| `ingenieria-3d` | 15 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, Blender y FreeCAD y consultas a Codex |
 | `cad-3d-comunidad` | 16 | build123d, ensambles sin interferencias, render de GLB, fabricabilidad (CNC, chapa, inyección), impresión 3D, piezas en STEP, OpenSCAD y automatización de SolidWorks, Fusion 360, CATIA, NX y Rhino |
 | `fluidos-bombas-termo` | 31 | Bombas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías, CoolProp y thermo, unidades, OpenFOAM, ANSYS Fluent, COMSOL |
 | `ciencia-y-calculo` | 26 | SymPy, gráficos, incertidumbre de mediciones, estadística, análisis de datos, scikit-learn, grafos, SimPy, optimización, Octave, redacción técnica, bibliografía y pósters |
@@ -77,8 +77,16 @@ Los nombres de los menús pueden aparecer en español.
 | `calculos-ingenieria` | Memorias de cálculo: iluminación, aire comprimido, conductores, motores, cintas y balances de masa y energía |
 | `conectar-programas-cad` | Guía para conectar Claude con Blender y FreeCAD (servidores MCP) y que trabaje directamente en esos programas |
 | `trabajar-con-codex` | Claude le consulta a Codex (ChatGPT) desde la terminal para una segunda opinión o una revisión independiente, y combina las dos respuestas |
+| `maquinas-electricas` | Transformadores (ensayos de vacío y cortocircuito, regulación, rendimiento, Dyn11, paralelo), motor asincrónico (placa, cupla, Kloss, arranques directo, estrella-triángulo, autotransformador, arrancador suave, variador, clases IE), monofásicos y Steinmetz, máquina sincrónica y de continua. Calculadora `maquinas.py` |
+| `ensayos-materiales` | Tracción, dureza Brinell, Rockwell y Vickers, Charpy, doblado y plegado, fatiga y ensayos no destructivos, con informe de laboratorio e incertidumbre. Calculadora `ensayos.py` (lee el CSV de la máquina de tracción) |
+| `normas-tecnicas-ar` | Mapa de normas argentinas: AEA 90364, IRAM-AADL J 20-06, Ley 19.587 y Dec. 351/79 con sus resoluciones, serie IRAM 4500 de dibujo, ISO 1219, aceros, ambiente y aparatos a presión por provincia; valores clave con su fuente y cómo citar en APA 7 |
+| `neumatica-electroneumatica` | Circuitos neumáticos y electroneumáticos (FluidSIM o tablero): símbolos ISO 1219, secuencias, cascada, paso a paso, relés, GRAFCET y paso a PLC, cilindros y pandeo. Calculadora `neumatica.py` (arma la cascada desde la secuencia) |
+| `cnc-mecanizado` | Programación CNC de torno y fresadora (estilo Fanuc, con notas de controles GSK), ciclos, compensaciones, datos de corte, hoja de proceso y simulación. `cnc.py` calcula corte, genera un perfil de torneado y revisa programas .nc |
+| `simulador-educativo` | Simuladores de una sola página que andan sin internet, para corroborar un ensayo o un cálculo: parámetros, gráfico, animación, modo laboratorio con mediciones y exportar CSV/PNG. Plantilla probada con Playwright |
+| `exposicion-oral` | Defensas y exposiciones en grupo: reparto por tiempos, guion hablado, tarjetas, Pecha Kucha, panel de expertos, banco de preguntas probables con respuesta y checklist del día |
+| `revision-tecnica` | Control independiente antes de entregar: rehace las cuentas (script `verificar_numeros.py`), revisa unidades, normas, citas, coherencia y consigna, y devuelve una tabla de correcciones |
 
-Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib`. Cada script trae un ejemplo: `python lamina_a3.py demo salida` y `python exportar_cad.py demo salida`.
+Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`) usan solo Python 3.9 o más. Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
 
 ## Skills de la comunidad
 
@@ -91,7 +99,8 @@ Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh m
 - Cada skill es una carpeta con un `SKILL.md`. El encabezado tiene `name` y `description`; la descripción es lo que decide cuándo Claude usa la skill.
 - Las skills propias se mejoran en `plugins/ingenieria-3d/`. Las de la comunidad conviene dejarlas como están y, si sus autores las actualizan, volver a copiarlas y anotar el commit nuevo en el `CREDITOS.md`.
 - Algunos plugins (`blender-bim-sverchok`, `simulacion-numerica`, `mattpocock-skills`) conservan las subcarpetas del original para que funcionen los enlaces entre skills; por eso su `plugin.json` lista cada skill en el campo `skills`.
-- Se edita desde GitHub (lápiz ✏️ → *Commit changes*) o pidiéndoselo a Claude.
+- Se edita desde GitHub (lápiz ✏️ → *Commit changes*) o pidiéndoselo a Claude (las reglas para Claude están en `CLAUDE.md`).
+- Antes de subir cambios: `python scripts/validar_kit.py` (frontmatter, nombres, descripciones, rutas, skills repetidas y claves filtradas). GitHub Actions lo corre solo en cada push, junto con los demos de los scripts.
 - Los plugins no fijan número de versión, así que cada cambio subido cuenta como actualización. En Claude Code se baja con `/plugin marketplace update kit-ingenieria-3d`.
 - No guardar en este repo archivos `.zip` de otros plugins ni claves o contraseñas: el repo es público.
 
@@ -99,6 +108,8 @@ Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh m
 
 ```
 .claude-plugin/marketplace.json     catálogo del marketplace (15 plugins)
+CLAUDE.md                           reglas para Claude cuando edita este repo
+scripts/validar_kit.py              revisa marketplace, plugins y skills (lo corre GitHub Actions)
 plugins/ingenieria-3d/              skills propias, con scripts y plantillas
 plugins/<plugin de la comunidad>/
   .claude-plugin/plugin.json

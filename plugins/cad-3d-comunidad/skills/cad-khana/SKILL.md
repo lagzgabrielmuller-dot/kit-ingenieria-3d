@@ -1,6 +1,6 @@
 ---
 name: cad-khana
-description: Diagnostics-first CAD wrapper around Build123d: assembly-level interference/clearance assertions plus optional per-part printability checks. Load BEFORE editing an `assembly.py` that uses the wrapper or interpreting its diagnostic JSON — SKILL.md has conventions the scripts rely on but don't restate, including which of three file kinds you are editing, and names the reference file to load for each task. TRIGGER: about to run `khana check`/`export`/`view`/`draw`/`run`, or editing a file that imports `cad_khana` or calls `Assembly()`/`check()`/`inspect()`.
+description: "Diagnostics-first CAD wrapper around Build123d: assembly-level interference/clearance assertions plus optional per-part printability checks. Load BEFORE editing an `assembly.py` that uses the wrapper or interpreting its diagnostic JSON — SKILL.md has conventions the scripts rely on but don't restate, including which of three file kinds you are editing, and names the reference file to load for each task. TRIGGER: about to run `khana check`/`export`/`view`/`draw`/`run`, or editing a file that imports `cad_khana` or calls `Assembly()`/`check()`/`inspect()`."
 ---
 
 # cad-khana
