@@ -57,7 +57,7 @@ python scripts/maquinas.py steinmetz --P 1,5 --U 220
 | η máxima (C = 0,430) | 98,69 % |
 | Icc permanente en BT | 11.367 A |
 
-**Conexiones y otros.** Dyn11: AT en triángulo, BT en estrella con neutro accesible, índice 11 → la BT atrasa 11 × 30° = 330° (adelanta 30°) respecto de la AT. Paralelo: mismas relaciones de tensión (diferencias menores de 0,4 %), mismo índice horario, ucc iguales o que difieran menos de 10 % y potencias que no difieran más de 2:1; cada uno toma carga en proporción a Sn/ucc. Autotransformador: la potencia que transforma el bobinado es S·(1 − U2/U1) (400/320 V → 20 %), pero no aísla y su ucc es baja. Transformadores de medida (IEC 61869-2 y 61869-3): TI con secundario de 5 A o 1 A, **nunca abrir su secundario con corriente en el primario** (se cortocircuita antes de sacar el instrumento); TV con secundario de 100, 110 o 120 V, **nunca cortocircuitar su secundario**.
+**Conexiones y otros.** Dyn11: AT en triángulo, BT en estrella con neutro accesible, índice 11 → la BT atrasa 11 × 30° = 330° (adelanta 30°) respecto de la AT. Paralelo: mismas relaciones de tensión (diferencias menores de 0,4 %), mismo índice horario, ucc iguales o que difieran menos de 10 % y relación de potencias menor que 2:1; cada uno toma carga en proporción a Sn/ucc. Autotransformador: la potencia que transforma el bobinado es S·(1 − U2/U1) (400/320 V → 20 %), pero no aísla y su ucc es baja. Transformadores de medida (IEC 61869-2 y 61869-3): TI con secundario de 5 A o 1 A, **nunca abrir su secundario con corriente en el primario** (se cortocircuita antes de sacar el instrumento); TV con secundario de 100, 110 o 120 V, **nunca cortocircuitar su secundario**.
 
 Detalle, más ejemplos (paralelo, grupo vectorial, TI y TV): `references/transformadores.md`.
 

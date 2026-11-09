@@ -20,7 +20,12 @@ El que hizo el trabajo no ve sus propios errores: da por buenas las cuentas que 
 5. **Criterio técnico y normas.** Valores adoptados normalizados y del lado seguro; límites de norma (caída de tensión, iluminación, ruido, sección mínima) según la skill **normas-tecnicas-ar** o lo que fije la cátedra. Supuestos escritos y razonables.
 6. **Citas y fuentes.** Que lo citado diga eso (comparar con el libro o el apunte por página o sección), que no haya referencias inventadas, que precios y datos de catálogo tengan fuente y fecha, y el formato pedido (APA 7 u otro).
 7. **Coherencia entre entregables.** Los mismos valores, códigos de equipos y nombres en informe, planos, presentación, simulador y guion.
-8. **Forma.** Carátula, índice real, numeración de figuras y tablas citadas en el texto, ecuaciones con símbolos explicados, PDF sin páginas en blanco ni tablas cortadas (la skill **informe-tecnico** tiene la lista de verificación del archivo).
+8. **Forma.** Carátula, índice real, numeración de figuras y tablas citadas en el texto, ecuaciones con símbolos explicados, PDF sin páginas en blanco ni tablas cortadas (la skill **informe-tecnico** tiene la lista de verificación del archivo). Correr `scripts/revisar_documento.py` sobre **los archivos finales** (los que se van a mandar, no los borradores): marca lo que más baja la nota y nadie revisa al final:
+   - marcadores sin completar ("(completar)", "A completar", "Haga clic aquí…", "Untitled", TODO);
+   - un mismo nombre escrito de dos formas (la empresa del caso, la central, un autor);
+   - tablas con columnas vacías (por ejemplo, quién expone cada parte);
+   - texto que quedó de una prueba o un chiste, y palabras repetidas.
+   Además, confirmar el **formato de entrega** que pidió el profesor: si pidió un solo PDF, va todo en un PDF (no Word y Excel por separado).
 9. **Defensa.** De lo revisado salen las preguntas probables del profesor: por qué se adoptó cada valor clave, qué pasaría si cambia un dato, de dónde sale cada fórmula.
 
 ## Gravedad
@@ -44,6 +49,9 @@ El que hizo el trabajo no ve sus propios errores: da por buenas las cuentas que 
 | Ensayos | Brinell: F en N con el 0,102 o en kgf sin él; huella válida 0,24·D a 0,6·D |
 | CNC | En torno X va en diámetro; G96 siempre con límite de rpm; F en mm/vuelta o mm/min según el modo |
 | General | Redondear al final, no en el medio; valores de catálogo sin fuente; "datos típicos" presentados como medidos |
+
+## Script: `scripts/revisar_documento.py`
+Último control del archivo que se entrega: `python revisar_documento.py informe.docx presentacion.pptx planilla.xlsx informe.pdf` (o `demo`). Lee Word, PowerPoint, Excel, PDF (con `pdftotext` o PyMuPDF) y texto; `--prohibidas lista.txt` suma palabras a buscar. Sale con código 1 si encuentra algo.
 
 ## Script: `scripts/verificar_numeros.py`
 Recalcula los resultados del informe a partir de los datos y una fórmula por resultado, y marca los que difieren. Solo biblioteca estándar; las fórmulas solo admiten aritmética y funciones de `math` (no ejecuta otra cosa).

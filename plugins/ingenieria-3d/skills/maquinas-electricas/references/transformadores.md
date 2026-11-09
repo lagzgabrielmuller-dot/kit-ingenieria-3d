@@ -77,7 +77,7 @@ Como un transformador de distribución trabaja buena parte del día con carga pa
 
 ## 7. Paralelo
 
-Condiciones (reglas usuales, de una guía basada en IEC): misma relación de tensiones (diferencias menores de 0,4 %), mismo índice horario y misma secuencia, ucc iguales o que difieran menos de 10 %, y potencias que no difieran más de 2:1 para paralelo permanente. Los cables hasta el punto de unión, de longitud y sección parecidas.
+Condiciones (reglas usuales, de una guía basada en IEC): misma relación de tensiones (diferencias menores de 0,4 %), mismo índice horario y misma secuencia, ucc iguales o que difieran menos de 10 %, y relación de potencias menor que 2:1 para paralelo permanente. Los cables hasta el punto de unión, de longitud y sección parecidas. La [Guía de instalaciones eléctricas de Schneider Electric](https://www.electrical-installation.org/enwiki/Parallel_operation_of_transformers) (fuente de fabricante) pide lo mismo en forma cualitativa: misma relación de tensiones, mismo grupo de conexión (por ejemplo Dyn11), misma impedancia de cortocircuito y conexiones de BT de igual impedancia hasta el tablero donde se unen, y no recomienda el paralelo con una relación de potencias de 2 o más. Las tolerancias de 0,4 % y 10 % no se confirmaron en IEC 60076-8 (verificar en la norma vigente).
 
 Reparto de carga (relaciones iguales): Si = Scarga·(Sni/ucci) / Σ(Snj/uccj). Lo que más carga toma es el de **menor** ucc.
 

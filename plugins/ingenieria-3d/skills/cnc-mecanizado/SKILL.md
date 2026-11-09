@@ -199,6 +199,7 @@ Diferencias con Fanuc confirmadas en sus manuales (detalle y enlaces en `referen
 
 - **980TD**: muy parecido a Fanuc sistema A (G70–G76, G90/G92/G94, G96/G97, G98/G99, U/W, `T0101`, `O` + 4 cifras, M98/M99); G33 es roscado con macho y G32 roscado ([GD]). El 980TDc agrega J, K y L en G92 ([GC]).
 - **928TC y 928TE**: el programa se llama `%` + 2 cifras y cada bloque lleva N + 4 cifras ([GC9], [GE2]); en el 928TC, `T22` = herramienta 2 con corrector 2 (dos cifras) y G26/G27/G29 vuelven al punto de referencia del programa; sus ejemplos empiezan con `G50 X100 Z100` ([GC9]); el 928TEa usa `T01□□` y arranca en **G98 (mm/min)** ([GE]).
+- **928TEa**: G33 es el roscado y G32 el roscado con macho, al revés que en el 980TD; G90, G92, G94 y G71 a G76 cumplen funciones parecidas a las de Fanuc, pero el formato de cada bloque se toma del manual ([GE3]).
 - **Velocidades**: sin variador, S1 a S4 (o S00 a S15) son **gamas** de la máquina, no rpm; con variador, S en rpm por la salida analógica ([GC9], [GD]).
 - Las M (plato, contrapunta, lubricación) cambian de modelo a modelo y las define el PLC del fabricante ([GD]).
 
@@ -221,6 +222,7 @@ Cada máquina o taller puede tener convenciones propias (por ejemplo, un corrimi
 [GC9]: https://manualmachine.com/gsk/gsk928tc/4712520-user-manual "GSK928TC User Manual"
 [GE]: https://manualmachine.com/gsk/gsk928tea/4712525-user-manual "GSK928TEa User Manual"
 [GE2]: https://manualmachine.com/gsk/gsk928teii/4712524-user-manual/ "GSK928TE II User Manual"
+[GE3]: https://www.manualslib.com/manual/1593748/Gsk-Gsk928tea.html "GSK928TEa User Manual, índice"
 [GT]: https://manualmachine.com/gsk/gsk928te/4712523-user-manual "GSK928TE/GSK928TC User Manual"
 [SC]: https://cdn.sandvik.coromant.com/files/sitecollectiondocuments/services/metal-cutting-e-learning/formulas-and-definitions/formulas-and-deinitions-for-milling-metric-enu.pdf "Sandvik Coromant, fórmulas de fresado"
 [MT]: https://data.mmc-carbide.com/4416/9575/0602/catalog_c010a_turning_inserts.pdf "Mitsubishi Materials, catálogo C010A de plaquitas de torneado"

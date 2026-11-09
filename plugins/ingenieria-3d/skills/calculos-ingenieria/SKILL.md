@@ -35,7 +35,7 @@ Las cuentas se hacen con código (Python), nunca de cabeza, y el script queda co
 **Conductores**
 - Corriente: monofásica I = P/(U·cosφ); trifásica I = P/(√3·U·cosφ); motores I = P_útil/(√3·U·cosφ·η).
 - Sección por corriente admisible según las tablas de la AEA 90364 (forma de instalación, temperatura, agrupamiento). Coordinar Ib ≤ In ≤ Iz.
-- Caída de tensión: trifásica ΔU = √3·I·L·(r·cosφ + x·senφ); monofásica ΔU = 2·I·L·(r·cosφ + x·senφ). ρ del cobre ≈ 0,0172 Ω·mm²/m a 20 °C (corregir a la temperatura de servicio). Comparar con el límite de la AEA para ese circuito (habitualmente 3 % en iluminación y 5 % en fuerza motriz).
+- Caída de tensión: trifásica ΔU = √3·I·L·(r·cosφ + x·senφ); monofásica ΔU = 2·I·L·(r·cosφ + x·senφ). ρ del cobre ≈ 0,0172 Ω·mm²/m a 20 °C (corregir a la temperatura de servicio). Comparar con el límite de la AEA (770.15.6; 771.19.7): 3 % en circuitos terminales de iluminación y tomacorrientes; en circuitos que alimentan solo motores, 5 % en régimen y 15 % en el arranque. La caída de un circuito terminal se suma a la de la línea seccional que alimenta su tablero (fuentes en la skill **normas-tecnicas-ar**).
 - Cortocircuito: S ≥ I·√t / k, con k = 115 (cobre en PVC) o 143 (cobre en XLPE).
 
 **Motores y transmisiones**

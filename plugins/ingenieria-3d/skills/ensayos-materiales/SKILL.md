@@ -98,8 +98,8 @@ Las escalas no se convierten con fórmulas: se usan las tablas de ISO 18265, que
 
 ## Doblado y plegado (ISO 7438)
 
-- La probeta apoya en dos rodillos y un mandril de diámetro D la dobla en el centro hasta el ángulo α que fija la norma de producto; distancia entre apoyos l = (D + 3a) ± a/2, con a = espesor o diámetro, fija durante el ensayo (verificar en la norma vigente). Variantes: hasta un ángulo, hasta ramas paralelas o hasta que las ramas se toquen (plegado a fondo, sin mandril).
-- Temperatura entre 10 y 35 °C. Criterio: el que fije la norma de producto; si no dice nada, que no aparezcan fisuras visibles sin aumento (verificar en la norma vigente).
+- La probeta apoya en dos rodillos y un mandril de diámetro D la dobla en el centro hasta el ángulo α que fija la norma de producto; distancia entre apoyos l = (D + 3a) ± a/2, con a = espesor o diámetro, fija durante el ensayo, salvo que la norma de producto fije otra (ISO 7438:2020, 6.2.2; fuentes en `references/charpy-doblado-fatiga-end.md`). Variantes: hasta un ángulo, hasta ramas paralelas o hasta que las ramas se toquen (plegado a fondo, sin mandril).
+- Temperatura entre 10 y 35 °C, o (23 ± 5) °C si se pide temperatura controlada. Criterio: el que fije la norma de producto; si no dice nada, que no aparezcan fisuras visibles sin aumento (cláusula 9 de ISO 7438:2020, no leída: verificar en la norma vigente).
 - **Barras ADN 420** (IRAM-IAS U 500-528; ADN 420 S soldables: IRAM-IAS U 500-207): doblado a 180° sobre mandril de 3,5·d para d ≤ 25 mm, 5·d para 32 mm y 7·d para 40 mm (hojas técnicas de fabricantes; verificar en la edición vigente de la norma); se acepta si no hay fisuras ni grietas transversales en la zona traccionada.
 - Deformación de la fibra exterior ≈ a/(D + a): con mandril 3,5·d, 1/4,5 = 22,2 %, mucho más que el 12 % de alargamiento mínimo: el ensayo exige ductilidad local.
 - Trampa: el mandril del ensayo no es el diámetro mínimo de doblado en obra que dan las tablas de los fabricantes.

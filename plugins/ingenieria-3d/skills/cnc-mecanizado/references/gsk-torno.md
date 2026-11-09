@@ -46,6 +46,11 @@ Fuentes: [GT] *GSK928TE/GSK928TC Turning Machine CNC System User Manual* (<https
   - Herramientas `T01□□` a `T16□□` (hasta 16).
   - S01 a S04 para 4 gamas directas, 16 gamas en BCD o salida analógica.
   - M que lista: M00, M02, M20, M30, M03, M04, M05, M08, M09, M10, M11, M12, M32, M33, M41 a M44, M47/M48, M78 a M80, M91 a M99, M21 a M24; M60 a M74 las define el usuario.
+- Índice del manual del 928TEa ([GE3] <https://www.manualslib.com/manual/1593748/Gsk-Gsk928tea.html>). Las páginas con el formato de cada ciclo no se pudieron leer: las direcciones de cada bloque se toman del manual de la máquina.
+  - **G33 es el roscado y G32 el ciclo de roscado con macho**, al revés que en el 980TD (G32 roscado, G33 macho, [GD]): un bloque copiado de un control al otro cambia de función.
+  - Ciclos simples: G90 cilindrado exterior (corte axial), G92 roscado, G94 refrentado interior o exterior (también cónico), G74 agujereado profundo en la cara frontal, G75 ranurado.
+  - Ciclos compuestos: G71 desbaste axial, G72 desbaste frontal, G73 ciclo de corte cerrado, G76 roscado múltiple; G22 y G80, repetición de una parte del programa.
+  - G27, G29, G81 y G84 no figuran en ese índice. En el 928TC no se confirmó cuál de G32 y G33 es el roscado.
 
 ## Mismo nombre, otra función
 

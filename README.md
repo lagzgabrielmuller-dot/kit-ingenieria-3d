@@ -84,9 +84,9 @@ Los nombres de los menús pueden aparecer en español.
 | `cnc-mecanizado` | Programación CNC de torno y fresadora (estilo Fanuc, con notas de controles GSK), ciclos, compensaciones, datos de corte, hoja de proceso y simulación. `cnc.py` calcula corte, genera un perfil de torneado y revisa programas .nc |
 | `simulador-educativo` | Simuladores de una sola página que andan sin internet, para corroborar un ensayo o un cálculo: parámetros, gráfico, animación, modo laboratorio con mediciones y exportar CSV/PNG. Plantilla probada con Playwright |
 | `exposicion-oral` | Defensas y exposiciones en grupo: reparto por tiempos, guion hablado, tarjetas, Pecha Kucha, panel de expertos, banco de preguntas probables con respuesta y checklist del día |
-| `revision-tecnica` | Control independiente antes de entregar: rehace las cuentas (script `verificar_numeros.py`), revisa unidades, normas, citas, coherencia y consigna, y devuelve una tabla de correcciones |
+| `revision-tecnica` | Control independiente antes de entregar: rehace las cuentas (`verificar_numeros.py`), revisa unidades, normas, citas, coherencia y consigna, y pasa el archivo final por `revisar_documento.py` (marcadores sin completar, nombres escritos de dos formas, tablas incompletas, texto que quedó) |
 
-Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`) usan solo Python 3.9 o más. Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
+Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`) usan solo Python 3.9 o más. Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
 
 ## Skills de la comunidad
 

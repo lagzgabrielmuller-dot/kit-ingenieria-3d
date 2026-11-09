@@ -2,6 +2,8 @@
 
 Leer cuando hay que interpretar o graficar la curva, sacar Rp0,2 a mano o en una planilla, pasar a tensión y deformación verdaderas, trabajar sin extensómetro o describir la rotura. Definiciones según ISO 6892-1:2019.
 
+En Argentina, la IRAM-IAS U 500-102 de 1987 tenía, entre otras, la Parte I, «Método de ensayo de tracción de productos de acero. Condiciones generales», y la Parte III, «Chapas y flejes finos de acero. Método de ensayo de tracción», según un [trabajo del INTI de 2005](https://app.inti.gob.ar/greenstone3/sites/localsite/collect/works/index/assoc/304512_p.dir/doc.pdf) que las cita. No se confirmó qué edición está vigente ni si equivale a ISO 6892-1 (verificar en el [catálogo IRAM](https://www.iram.org.ar/normalizacion/busca-tu-norma/)).
+
 ## 1. La curva y sus zonas
 
 1. **Elástica**: recta (ley de Hooke, σ = E·ε); si se descarga, la probeta vuelve a su largo.

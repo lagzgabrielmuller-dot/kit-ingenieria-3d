@@ -16,7 +16,7 @@ Base (ya está en la plantilla): T = 2·T_máx / (s/s_k + s_k/s), con s_k = s_N�
 
 ## 2. Ensayo de doblado y plegado
 
-**Doblado guiado** (ISO 7438 o la norma que indique la cátedra): probeta de espesor a y ancho b doblada con un mandril de diámetro D hasta un ángulo α, sobre dos apoyos separados l = D + 3·a (± a/2). Se aprueba si la cara traccionada no muestra fisuras visibles.
+**Doblado guiado** (ISO 7438 o la norma que indique la cátedra): probeta de espesor a y ancho b doblada con un mandril de diámetro D hasta un ángulo α, sobre dos apoyos separados l = D + 3·a (± a/2) (ISO 7438:2020, 6.2.2; fuentes en la skill **ensayos-materiales**). Se aprueba con el criterio de la norma de producto; si no fija ninguno, si la cara traccionada no muestra fisuras visibles sin aumento.
 - Deformación de la fibra exterior, con el eje neutro en la mitad del espesor: ε = a / (D + a). Con D = 2·a, ε = 33,3 %; con D = 3·a, 25 %.
 - Comparación orientativa con el material: el alargamiento a rotura A % del ensayo de tracción, o el radio mínimo de doblado de Kalpakjian, R_mín/a = 50/r − 1 (r: reducción de área en %).
 - Fuerza en flexión de tres puntos (orientativa, material elastoplástico perfecto): zona elástica F = 48·E·I·δ/l³ con I = b·a³/12, hasta F_y = 2·σ_y·b·a²/(3·l); colapso plástico F_p = σ_y·b·a²/l = 1,5·F_y.

@@ -65,7 +65,7 @@ Detalle de cada tema: instalaciones, puesta a tierra, cables y símbolos en [ref
 
 | Tema | Valor | Fuente |
 |---|---|---|
-| Caída de tensión | Circuitos terminales de iluminación y tomacorrientes: **3 %**; circuitos que alimentan solo motores: **5 %** en régimen y **15 %** en el arranque | AEA 90364-7-770:2017, 770.15.6. En la 771 está en 771.19.7 (verificar en la norma) |
+| Caída de tensión | Circuitos terminales de iluminación y tomacorrientes: **3 %**; circuitos que alimentan solo motores: **5 %** en régimen y **15 %** en el arranque | AEA 90364-7-770:2017, 770.15.6; la 771 da los mismos valores en 771.19.7 según la [APSE](https://www.editores-srl.com.ar/sites/default/files/ie304_apse_verificaciones_conductores.pdf) (fuente secundaria) |
 | Diferencial | **IΔn ≤ 30 mA** en todos los circuitos terminales | AEA 770, 770.14.2.3 |
 | Diferencial (771) | IΔn ≤ 30 mA en circuitos terminales de iluminación y tomacorrientes de hasta 32 A | AEA 771 citada en la [guía de la Res. SRT 900/15](https://argentina.gob.ar/sites/default/files/res_srt_900_15-guia-practica_0.pdf) |
 | Puesta a tierra de protección | **Ra ≤ 40 Ω** (en TT con la 771, con diferencial de IΔn ≤ 300 mA; la Tabla 771.3.I da Ra según IΔn) | AEA 770, 770.14.4.1; guía SRT 900/15 |

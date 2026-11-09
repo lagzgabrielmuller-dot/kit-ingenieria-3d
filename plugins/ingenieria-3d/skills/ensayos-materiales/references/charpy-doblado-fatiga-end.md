@@ -33,10 +33,10 @@ ISO 7438:2020 (cuarta edición, reemplaza a la de 2016) define el método; el di
 - Barras y alambres: la sección entera.
 
 **Ensayo**:
-- Dos rodillos de apoyo y un mandril de diámetro D en el centro; distancia entre apoyos l = (D + 3a) ± a/2, con a = espesor o diámetro, fija durante el ensayo (verificar la expresión en la edición vigente).
-- Temperatura entre 10 y 35 °C (o (23 ± 5) °C si se pide temperatura controlada).
+- Dos rodillos de apoyo y un mandril de diámetro D en el centro; distancia entre apoyos l = (D + 3a) ± a/2, con a = espesor o diámetro, fija durante el ensayo, salvo que la norma de producto fije otra. Es la fórmula (1) de ISO 7438:2020, cláusula 6.2.2 (4.2.2 en las ediciones 2005 y 2016), leída en las vistas previas de iTeh de la [edición 2020](https://iteh.es/catalog/standards/iso/b3f3b8b3-b9e1-4c92-ae7c-c3ed77b61527/iso-7438-2020) y de la [edición 2005](https://cdn.standards.iteh.ai/samples/35928/e42a5bb60352419b809333d0ffbc6508/ISO-7438-2005.pdf). La edición 2020 (cuarta) reemplaza a la 2016 y agrega el anexo B, doblado en deformación plana.
+- Temperatura entre 10 y 35 °C (o (23 ± 5) °C si se pide temperatura controlada): cláusula 6.1 de las ediciones 2005 y 2016, en las mismas vistas previas.
 - Se dobla en forma continua y lenta hasta el ángulo α pedido. Otras variantes que piden algunas normas de producto: llevar las ramas a paralelas a una distancia dada, o hasta que se toquen (plegado a fondo, sin mandril).
-- Inspección: la cara traccionada (exterior). Si la norma de producto no fija otra cosa, se acepta si no hay fisuras visibles sin aumento (verificar en la edición vigente).
+- Inspección: la cara traccionada (exterior). Si la norma de producto no fija otra cosa, se acepta si no hay fisuras visibles sin aumento. Ese criterio va en la cláusula 9, «Interpretación de los resultados», de la edición 2020 (7 en la 2016), que no aparece en las vistas previas (verificar en la edición vigente).
 
 **Deformación de la fibra exterior**: ε ≈ a/(D + a) (eje neutro en la mitad del espesor). Ejemplos: mandril 3,5·d → 22,2 %; 5·d → 16,7 %; 7·d → 12,5 %; chapa de 3 mm sobre mandril de 6 mm → 33,3 %, con l = 6 + 9 ± 1,5 = (15 ± 1,5) mm.
 

@@ -28,7 +28,7 @@ jobs:
           cd /tmp
           for s in maquinas-electricas/scripts/maquinas.py ensayos-materiales/scripts/ensayos.py \
                    neumatica-electroneumatica/scripts/neumatica.py cnc-mecanizado/scripts/cnc.py \
-                   revision-tecnica/scripts/verificar_numeros.py; do
+                   revision-tecnica/scripts/verificar_numeros.py revision-tecnica/scripts/revisar_documento.py; do
             echo "== $s"
             python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/$s" demo > /dev/null
           done
