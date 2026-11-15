@@ -9,7 +9,7 @@
     {
       "name": "ingenieria-3d",
       "source": "./plugins/ingenieria-3d",
-      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas (AEA, IRAM, higiene y seguridad), neumática y electroneumática, programación CNC, simuladores sin internet, exposiciones orales, revisión técnica independiente, control de calidad de videos (color, volumen, loops), verificación de modelos de Blender (medidas y vistas), render de presentación con giro 360°, conexión con Blender, Fusion 360 y FreeCAD y consultas a Codex (ChatGPT).",
+      "description": "Planos DXF y PDF A3 según IRAM, modelos 3D para SolidWorks, Fusion 360, AutoCAD y Blender, visores 3D con three.js, informes técnicos, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas (AEA, IRAM, higiene y seguridad), neumática y electroneumática, programación CNC, simuladores sin internet, exposiciones orales, revisión técnica independiente, control de calidad de videos (color, volumen, loops), verificación de modelos de Blender (medidas y vistas), render de presentación con giro 360°, tablero de progreso en vivo, conexión con Blender, Fusion 360 y FreeCAD y consultas a Codex (ChatGPT).",
       "category": "ingenieria",
       "tags": ["cad", "3d", "planos", "ingenieria", "electromecanica", "maquinas-electricas", "ensayos", "normas", "neumatica", "cnc", "simuladores", "exposicion", "revision", "solidworks", "autocad", "fusion-360", "blender", "iram", "video", "ffmpeg"]
     },

@@ -1,6 +1,6 @@
 # Kit de ingeniería y diseño 3D para Claude
 
-Marketplace de plugins con **339 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
+Marketplace de plugins con **340 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
 
 Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comunidad, copiadas sin cambios desde sus repos con sus licencias y créditos (cada plugin tiene su `CREDITOS.md` y su carpeta `licencias/`).
 
@@ -8,7 +8,7 @@ Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comuni
 
 | Plugin | Skills | Para qué sirve |
 |---|---:|---|
-| `ingenieria-3d` | 18 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación y render de presentación de modelos de Blender, conexión con Blender, Fusion 360 y FreeCAD y consultas a Codex |
+| `ingenieria-3d` | 19 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación y render de presentación de modelos de Blender, tablero de progreso en vivo, conexión con Blender, Fusion 360 y FreeCAD y consultas a Codex |
 | `cad-3d-comunidad` | 16 | build123d, ensambles sin interferencias, render de GLB, fabricabilidad (CNC, chapa, inyección), impresión 3D, piezas en STEP, OpenSCAD y automatización de SolidWorks, Fusion 360, CATIA, NX y Rhino |
 | `fluidos-bombas-termo` | 31 | Bombas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías, CoolProp y thermo, unidades, OpenFOAM, ANSYS Fluent, COMSOL |
 | `ciencia-y-calculo` | 26 | SymPy, gráficos, incertidumbre de mediciones, estadística, análisis de datos, scikit-learn, grafos, SimPy, optimización, Octave, redacción técnica, bibliografía y pósters |
@@ -88,8 +88,9 @@ Los nombres de los menús pueden aparecer en español.
 | `video-calidad` | Control de calidad de videos antes de entregarlos: color BT.709 con etiquetas (evita rojos anaranjados en YouTube), negros y congelados, silencios, volumen en LUFS, costura de loops y hoja de contacto. `video_calidad.py` revisa, normaliza el audio y corrige el color |
 | `blender-verificacion` | Control de modelos de Blender: medidas de cada pieza en mm, escala sin aplicar, errores de geometría, normales, texturas faltantes, cámara y luces (`inspeccionar_escena.py`), y hoja con frente, lateral, planta e isométrica (`vistas_ortogonales.py`). Reglas para modelar con precisión y exportar |
 | `render-presentacion-3d` | Render de presentación con un comando (`estudio_turntable.py`): estudio con piso y tres luces escaladas al modelo, cámara encuadrada, foto principal y video girando 360° en MP4 con color BT.709, desde un `.blend` o importando GLB, STL, OBJ o FBX |
+| `progreso-en-vivo` | Tablero en el navegador que se actualiza solo mientras Claude trabaja: plan y pasos, imágenes (renders, vistas), borrador del texto, preguntas y actividad; con hook para Claude Code (`progreso.py`) |
 
-Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`) usan solo Python 3.9 o más; `video_calidad.py` necesita además `ffmpeg`, y los de `blender-verificacion` corren dentro de Blender (`blender -b archivo.blend -P script.py -- ...`). Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
+Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`, `progreso.py`) usan solo Python 3.9 o más; `video_calidad.py` necesita además `ffmpeg`, y los de `blender-verificacion` corren dentro de Blender (`blender -b archivo.blend -P script.py -- ...`). Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
 
 ## Skills de la comunidad
 
