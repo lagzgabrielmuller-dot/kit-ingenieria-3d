@@ -10,6 +10,8 @@ Comandos:
   init "Titulo" --plan "Paso 1|Paso 2|..." [--carpeta DIR] [--abrir]   crea el tablero y lo marca como activo
   paso N [--estado en_curso|hecho|error|pendiente] [--nota "..."]          actualiza un paso (empieza en 1)
   imagen RUTA [--titulo "..."]                                             agrega una imagen (png, jpg, gif, svg, webp)
+  vigilar DIR [--quitar]                                                   cada imagen nueva de DIR (renders, vistas) aparece sola
+                                                                           (tambien: init ... --vigilar DIR)
   texto ARCHIVO | --texto "..." [--titulo "..."]                           muestra el borrador (Markdown simple)
   pregunta "..."  |  responder                                            destaca o borra una pregunta para el usuario
   nota "..."                                                               agrega una linea a la actividad
@@ -176,6 +178,11 @@ def cmd_init(a):
     if e['plan']:
         e['plan'][0]['estado'] = 'en_curso'
     actividad(e, 'Tablero creado: ' + a.titulo)
+    if getattr(a, 'vigilar', None):
+        if not os.path.isdir(a.vigilar):
+            os.makedirs(a.vigilar, exist_ok=True)
+        e['vigilar'], e['visto'] = os.path.abspath(a.vigilar), time.time()
+        actividad(e, 'Vigila %s: cada imagen nueva aparece sola' % os.path.basename(e['vigilar'].rstrip('/\\')))
     with open(os.path.join(c, 'progreso.html'), 'w', encoding='utf-8') as f:
         f.write(PAGINA)
     guardar(c, e)
@@ -221,8 +228,48 @@ def cmd_paso(a):
             and not any(q['estado'] == 'en_curso' for q in e['plan']):
         e['plan'][i + 1]['estado'] = 'en_curso'
     actividad(e, 'Paso %d %s: %s%s' % (a.n, a.estado.replace('_', ' '), p['texto'], (' (' + a.nota + ')') if a.nota else ''))
+    revisar_vigilada(c, e)
     guardar(c, e)
     return 0
+
+
+EXT_IMG = ('.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp')
+
+
+def agregar_imagen(c, e, ruta, titulo=None):
+    ext = os.path.splitext(ruta)[1].lower()
+    base = re.sub(r'[^\w\-]', '_', os.path.splitext(os.path.basename(ruta))[0])[:40]
+    nombre = '%s_%s%s' % (dt.datetime.now().strftime('%H%M%S%f'), base, ext)
+    shutil.copy2(ruta, os.path.join(c, '.progreso', 'img', nombre))
+    e['imagenes'].append({'archivo': '.progreso/img/' + nombre, 'titulo': titulo or os.path.basename(ruta), 'hora': ahora()})
+    for viejo in e['imagenes'][:-MAX_IMG]:
+        try:
+            os.remove(os.path.join(c, viejo['archivo']))
+        except OSError:
+            pass
+    e['imagenes'] = e['imagenes'][-MAX_IMG:]
+    actividad(e, 'Imagen: ' + (titulo or os.path.basename(ruta)))
+
+
+def revisar_vigilada(c, e, maximo=6):
+    """Suma al tablero las imagenes nuevas de la carpeta vigilada (renders, vistas, graficos). Devuelve cuantas sumo."""
+    d = e.get('vigilar')
+    if not d or not os.path.isdir(d):
+        return 0
+    visto, ahora_s, nuevas = e.get('visto', 0.0), time.time(), []
+    for nombre in os.listdir(d):
+        ruta = os.path.join(d, nombre)
+        if not nombre.lower().endswith(EXT_IMG) or not os.path.isfile(ruta):
+            continue
+        st = os.stat(ruta)
+        if st.st_mtime > visto and st.st_size > 0 and ahora_s - st.st_mtime > 0.5:  # completas, no a medio escribir
+            nuevas.append((st.st_mtime, ruta))
+    nuevas.sort()
+    for mt, ruta in nuevas[-maximo:]:
+        agregar_imagen(c, e, ruta)
+    if nuevas:
+        e['visto'] = nuevas[-1][0]
+    return len(nuevas[-maximo:])
 
 
 def cmd_imagen(a):
@@ -230,17 +277,22 @@ def cmd_imagen(a):
     if not os.path.isfile(a.ruta):
         print('No existe la imagen:', a.ruta)
         return 2
-    ext = os.path.splitext(a.ruta)[1].lower()
-    nombre = '%s_%s%s' % (dt.datetime.now().strftime('%H%M%S%f'), re.sub(r'[^\w\-]', '_', os.path.splitext(os.path.basename(a.ruta))[0])[:40], ext)
-    shutil.copy2(a.ruta, os.path.join(c, '.progreso', 'img', nombre))
-    e['imagenes'].append({'archivo': '.progreso/img/' + nombre, 'titulo': a.titulo or os.path.basename(a.ruta), 'hora': ahora()})
-    for viejo in e['imagenes'][:-MAX_IMG]:
-        try:
-            os.remove(os.path.join(c, viejo['archivo']))
-        except OSError:
-            pass
-    e['imagenes'] = e['imagenes'][-MAX_IMG:]
-    actividad(e, 'Imagen: ' + (a.titulo or os.path.basename(a.ruta)))
+    agregar_imagen(c, e, a.ruta, a.titulo)
+    guardar(c, e)
+    return 0
+
+
+def cmd_vigilar(a):
+    c, e = con_tablero(a)
+    if a.quitar:
+        e.pop('vigilar', None)
+        actividad(e, 'Deja de vigilar la carpeta de imágenes')
+    else:
+        if not a.dir or not os.path.isdir(a.dir):
+            print('No existe la carpeta:', a.dir)
+            return 2
+        e['vigilar'], e['visto'] = os.path.abspath(a.dir), time.time()
+        actividad(e, 'Vigila %s: cada imagen nueva aparece sola' % os.path.basename(e['vigilar'].rstrip('/\\')))
     guardar(c, e)
     return 0
 
@@ -272,6 +324,7 @@ def cmd_simple(a):
         actividad(e, 'Terminado' + ((': ' + a.nota) if a.nota else ''))
         if os.path.isfile(PUNTERO) and open(PUNTERO, encoding='utf-8').read().strip() == c:
             os.remove(PUNTERO)
+    revisar_vigilada(c, e)
     guardar(c, e)
     return 0
 
@@ -314,6 +367,7 @@ def cmd_hook():
         if e.get('terminado'):
             return 0
         actividad(e, texto_hook(json.loads(sys.stdin.read() or '{}')))
+        revisar_vigilada(c, e)
         guardar(c, e)
     except Exception:
         pass
@@ -335,14 +389,31 @@ def cmd_demo():
         corre('imagen', svg, '--titulo', 'Vista de frente')
         corre('texto', '--texto', '# Informe\n## Cálculo\n- Carga: **2,5 kN**\n- Tensión: `σ = F/A`', '--titulo', 'Informe (borrador)')
         corre('pregunta', '¿El agujero va de 10 o de 12 mm?')
+        renders = os.path.join(d, 'renders')
+        os.makedirs(renders)
+        viejo_png = os.path.join(renders, 'viejo.svg')
+        with open(viejo_png, 'w', encoding='utf-8') as f:
+            f.write('<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"/>')
+        os.utime(viejo_png, (time.time() - 60, time.time() - 60))
+        corre('vigilar', renders)
+        nuevo_svg = os.path.join(renders, 'vista_iso.svg')
+        with open(nuevo_svg, 'w', encoding='utf-8') as f:
+            f.write('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#333"/></svg>')
+        visto = leer(d)['visto']
+        os.utime(nuevo_svg, (visto + 0.05, visto + 0.05))  # escrita despues de empezar a vigilar
+        time.sleep(0.6)  # el tablero no toma archivos de menos de 0,5 s (pueden estar a medio escribir)
+        ev = leer(d)
+        sumadas = revisar_vigilada(d, ev)
+        guardar(d, ev)
+        vig_ok = sumadas == 1 and leer(d)['imagenes'][-1]['titulo'] == 'vista_iso.svg' and revisar_vigilada(d, leer(d)) == 0
         h1 = texto_hook({'tool_name': 'Bash', 'tool_input': {'command': 'guias.py pal-clave gemini --clave AIzaSyA1234567890abcdefghijk'}})
         h2 = texto_hook({'tool_name': 'mcp__blender__execute_blender_code', 'tool_input': {'code': 'x'}})
         h3 = texto_hook({'tool_name': 'Edit', 'tool_input': {'file_path': os.path.join(d, 'informe.md')}})
         hook_ok = ('AIza' not in h1.replace('AIza***', '') and '--clave ***' in h1 and h2 == 'blender: execute_blender_code'
                    and h3 == 'Edit informe.md')
         e = leer(d)
-        ok = (hook_ok and os.path.isfile(os.path.join(d, '.progreso', '.gitignore'))
-              and e['plan'][0]['estado'] == 'hecho' and e['plan'][1]['estado'] == 'en_curso' and len(e['imagenes']) == 1
+        ok = (hook_ok and vig_ok and os.path.isfile(os.path.join(d, '.progreso', '.gitignore'))
+              and e['plan'][0]['estado'] == 'hecho' and e['plan'][1]['estado'] == 'en_curso' and len(e['imagenes']) == 2
               and '<b>2,5 kN</b>' in e['texto']['html'] and e['pregunta'] and os.path.isfile(os.path.join(d, 'progreso.html'))
               and open(os.path.join(d, '.progreso', 'estado.js'), encoding='utf-8').read().startswith('window.PROGRESO'))
         corre('fin', '--nota', 'demo')
@@ -359,6 +430,8 @@ def construir_parser():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest='cmd')
     p = sp.add_parser('init'); p.add_argument('titulo'); p.add_argument('--plan'); p.add_argument('--carpeta'); p.add_argument('--abrir', action='store_true')
+    p.add_argument('--vigilar', help='carpeta de renders o graficos: cada imagen nueva aparece sola en el tablero')
+    p = sp.add_parser('vigilar'); p.add_argument('dir', nargs='?'); p.add_argument('--quitar', action='store_true'); p.add_argument('--carpeta')
     p = sp.add_parser('paso'); p.add_argument('n', type=int); p.add_argument('--estado', default='hecho', choices=['pendiente', 'en_curso', 'hecho', 'error'])
     p.add_argument('--nota'); p.add_argument('--texto'); p.add_argument('--carpeta')
     p = sp.add_parser('imagen'); p.add_argument('ruta'); p.add_argument('--titulo'); p.add_argument('--carpeta')
@@ -396,6 +469,8 @@ def despachar(a):
         hechos = sum(p['estado'] == 'hecho' for p in e['plan'])
         print('%s: %d de %d pasos, %d imagenes, %s' % (e['titulo'], hechos, len(e['plan']), len(e['imagenes']), os.path.join(c, 'progreso.html')))
         return 0
+    if a.cmd == 'vigilar':
+        return cmd_vigilar(a)
     if a.cmd == 'demo':
         return cmd_demo()
     if a.cmd == 'hook':
