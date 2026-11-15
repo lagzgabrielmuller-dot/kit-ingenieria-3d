@@ -66,11 +66,13 @@ ffmpeg -framerate 30 -i cuadros/%05d.png ^
 | `h264_nvenc -preset p6 -tune hq -rc vbr -cq 17 -b:v 0` | Rápido, con placa NVIDIA; archivos más pesados |
 | `hevc_nvenc ... -tag:v hvc1` | Más liviano; no todos los programas lo abren |
 
+Para YouTube, la ayuda oficial pide H.264 High, 4:2:0, `+faststart`, 2 cuadros B, GOP de medio segundo, AAC a 48 kHz y subir con los mismos cuadros por segundo de la fuente; como mínimo 8 Mb/s en 1080p hasta 30 cuadros/s, 12 Mb/s a 48–60, y 16 y 24 Mb/s en 1440p ([YouTube](https://support.google.com/youtube/answer/1722171?hl=en)). Para la entrega final con NVENC, NVIDIA sugiere `-preset p7 -tune hq -multipass fullres` ([NVIDIA](https://docs.nvidia.com/video-technologies/video-codec-sdk/13.1/ffmpeg-with-nvidia-gpu/index.html)). Wallpaper Engine recomienda H.264 en `.mp4` a 30 o 60 cuadros/s y no publica un bitrate.
+
 En un tramo de 6 s de animación con grano a 2560 × 1440 y 60 cuadros/s, NVENC a CQ 17 pidió unos 74 Mb/s (VMAF 79,4) y libx264 slow a CRF 18, 34 Mb/s (VMAF 77,2). Activar `-spatial-aq` y `-temporal-aq` en NVENC no mejoró el VMAF (79,0). El grano y el ruido son lo que más bits consume: si el archivo queda pesado, bajar el grano antes que la calidad.
 
 ### Audio
 
-- Objetivos: −14 LUFS integrados para YouTube y redes, −16 LUFS para pasar en un aula; pico verdadero ≤ −1 dBTP (deja margen para la compresión del audio).
+- Objetivos: −14 LUFS integrados para YouTube y redes (Spotify lo documenta así con pico ≤ −1 dBTP; YouTube no publica su valor y −14 es lo que miden terceros), −16 LUFS para pasar en un aula; pico verdadero ≤ −1 dBTP para dejar margen a la compresión del audio ([Spotify](https://support.spotify.com/artists/article/loudness-normalization/), [filtro loudnorm](https://ayosec.github.io/ffmpeg-filters-docs/8.0/Filters/Audio/loudnorm.html)).
 - `video_calidad.py audio VIDEO --lufs -14` mide y aplica ganancia lineal, sin comprimir la dinámica. Si avisa "modo dinámico", el pico no entraba con ganancia lineal: probar `--tp -2` o bajar picos en la mezcla.
 - Tomas de distintas fuentes van al mismo volumen antes de mezclar; la música por debajo de la voz (unos 10 dB menos que la voz es un punto de partida, ajustar de oído).
 
@@ -92,7 +94,8 @@ ffmpeg -i clip.mp4 -filter_complex "[0:v]split[a][b];[a]trim=start=X,setpts=PTS-
 ## Revisión visual
 
 - La hoja de contacto (`--hoja`) muestra 12 cuadros repartidos con su tiempo. Mirar que no haya tomas negras, cortes en mal lugar, deformaciones de la IA ni títulos cortados.
-- Títulos: que se lean en la hoja achicada (si no se leen ahí, en un celular tampoco). Para video vertical, dejar libres los bordes de arriba y abajo, donde las apps ponen botones y textos.
+- Títulos: que se lean en la hoja achicada (si no se leen ahí, en un celular tampoco). Para video vertical de 1080 × 1920, dejar libres unos 240 px arriba, 660 abajo y 120 a los costados (más una franja a la derecha), donde las apps ponen botones y textos (medido por terceros sobre la plantilla de TikTok; verificar en la app de destino).
+- Parpadeo de luz típico de los videos generados con difusión: `deflicker=s=5:m=am` antes de codificar.
 - Para mirar un momento puntual: `ffmpeg -ss 12.5 -i VIDEO -frames:v 1 cuadro.png`.
 
 ## Errores frecuentes
