@@ -7,6 +7,8 @@ description: "Hacer que Claude y ChatGPT trabajen juntos: Claude le consulta a C
 
 En la compu del usuario está instalado **Codex CLI** (`npm install -g @openai/codex`) con su cuenta de ChatGPT. Claude lo usa desde la terminal de esa compu (Desktop Commander o la terminal disponible en la sesión, con PowerShell). Codex no ve esta conversación: hay que pasarle todo el contexto en el pedido.
 
+Para consultar a varios modelos a la vez (Codex, Gemini, modelos locales) y comparar sus respuestas, ver **equipo-de-modelos**, que trae `guias.py`.
+
 ## Cuándo consultarlo
 
 - El usuario lo pide ("preguntale a ChatGPT", "que lo revise Codex", "trabajen los dos").
