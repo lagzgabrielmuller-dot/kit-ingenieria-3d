@@ -1,6 +1,6 @@
 # Kit de ingeniería y diseño 3D para Claude
 
-Marketplace de plugins con **343 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
+Marketplace de plugins con **344 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
 
 Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comunidad, copiadas sin cambios desde sus repos con sus licencias y créditos (cada plugin tiene su `CREDITOS.md` y su carpeta `licencias/`).
 
@@ -8,7 +8,7 @@ Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comuni
 
 | Plugin | Skills | Para qué sirve |
 |---|---:|---|
-| `ingenieria-3d` | 22 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación y render de presentación de modelos de Blender, tablero de progreso en vivo, conexión con Blender, Fusion 360 y FreeCAD, consultas a Codex y equipo de modelos guía (Codex, Gemini, Claude, Ollama, OpenRouter) |
+| `ingenieria-3d` | 23 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, instalaciones eléctricas, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación y render de presentación de modelos de Blender, tablero de progreso en vivo, conexión con Blender, Fusion 360 y FreeCAD, consultas a Codex y equipo de modelos guía (Codex, Gemini, Claude, Ollama, OpenRouter) |
 | `cad-3d-comunidad` | 16 | build123d, ensambles sin interferencias, render de GLB, fabricabilidad (CNC, chapa, inyección), impresión 3D, piezas en STEP, OpenSCAD y automatización de SolidWorks, Fusion 360, CATIA, NX y Rhino |
 | `fluidos-bombas-termo` | 31 | Bombas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías, CoolProp y thermo, unidades, OpenFOAM, ANSYS Fluent, COMSOL |
 | `ciencia-y-calculo` | 26 | SymPy, gráficos, incertidumbre de mediciones, estadística, análisis de datos, scikit-learn, grafos, SimPy, optimización, Octave, redacción técnica, bibliografía y pósters |
@@ -77,6 +77,7 @@ Los nombres de los menús pueden aparecer en español.
 | `calculos-ingenieria` | Memorias de cálculo: iluminación, aire comprimido, conductores, motores, cintas y balances de masa y energía |
 | `secado-y-psicrometria` | Aire húmedo (HR, W, entalpía, rocío, bulbo húmedo, altitud) y secaderos de aire caliente: agua a evaporar, caudal del ventilador, potencia del calentador, combustible, recirculación y diagrama psicrométrico en SVG; verificado contra CoolProp (`psicrometria.py`) |
 | `elementos-de-maquinas` | Tornillos (ISO 898-1, precarga y torque), ejes a fatiga (Goodman) y fluencia, chavetas DIN 6885-1, rodamientos (L10), correas en V, cadenas, engranajes rectos (Lewis) y soldadura en filete, con memoria de cálculo; reproduce un ejemplo de Shigley (`elementos.py`) |
+| `instalaciones-electricas` | Corriente de proyecto, caída de tensión y sección mínima, corrección del factor de potencia, cortocircuito de un transformador y sección térmica, jabalina de puesta a tierra e iluminación por lúmenes, con memoria de cálculo (`electricas.py`) |
 | `conectar-programas-cad` | Guía para conectar Claude con Blender (servidor comunitario y el oficial de Blender Lab), Fusion 360 y FreeCAD (servidores MCP), con los cuidados de seguridad |
 | `trabajar-con-codex` | Claude le consulta a Codex (ChatGPT) desde la terminal para una segunda opinión o una revisión independiente, y combina las dos respuestas |
 | `equipo-de-modelos` | Claude lidera y otros modelos (Codex, Gemini, otra sesión de Claude, Ollama local, OpenRouter) revisan o proponen alternativas, de a uno o en paralelo, con un informe para comparar; tapa claves antes de enviar y no usa la GPU con un juego abierto (`guias.py`) |
@@ -93,7 +94,7 @@ Los nombres de los menús pueden aparecer en español.
 | `render-presentacion-3d` | Render de presentación con un comando (`estudio_turntable.py`): estudio con piso y tres luces escaladas al modelo, cámara encuadrada, foto principal y video girando 360° en MP4 con color BT.709, desde un `.blend` o importando GLB, STL, OBJ o FBX |
 | `progreso-en-vivo` | Tablero en el navegador que se actualiza solo mientras Claude trabaja: plan y pasos, imágenes (renders, vistas), borrador del texto, preguntas y actividad; con hook para Claude Code (`progreso.py`) |
 
-Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`, `progreso.py`, `guias.py`, `psicrometria.py`, `elementos.py`) usan solo Python 3.9 o más; `video_calidad.py` necesita además `ffmpeg`, y los de `blender-verificacion` corren dentro de Blender (`blender -b archivo.blend -P script.py -- ...`). Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
+Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`, `progreso.py`, `guias.py`, `psicrometria.py`, `elementos.py`, `electricas.py`) usan solo Python 3.9 o más; `video_calidad.py` necesita además `ffmpeg`, y los de `blender-verificacion` corren dentro de Blender (`blender -b archivo.blend -P script.py -- ...`). Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
 
 ## Skills de la comunidad
 
