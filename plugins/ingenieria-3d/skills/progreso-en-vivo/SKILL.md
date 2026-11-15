@@ -28,7 +28,7 @@ python progreso.py fin --nota "entregado en PDF"
 | `nota "..."` | Agrega una línea a la actividad |
 | `fin`, `abrir`, `estado`, `demo` | Cerrar, volver a abrir, ver el estado, probar |
 
-La página se refresca cada 1,5 s sin recargarse (no pierde el scroll). Funciona abierta como archivo local, sin servidor ni internet. Sin `--carpeta`, los comandos usan el tablero activo (guardado en `~/.progreso_activo`).
+La página se refresca cada 1,5 s sin recargarse (no pierde el scroll). Funciona abierta como archivo local, sin servidor ni internet. Sin `--carpeta`, los comandos usan el tablero activo (guardado en `~/.progreso_activo`). El estado queda en `.progreso/`, que trae su propio `.gitignore`: si el tablero está dentro de un repositorio, no se sube.
 
 ## Qué mostrar en cada tipo de trabajo
 
@@ -48,7 +48,7 @@ Reglas:
 
 ## Con Claude Code: actividad automática
 
-Un hook `PostToolUse` agrega a la actividad cada archivo que Claude edita, cada comando y cada llamada a un servidor MCP (por ejemplo, Blender), sin que Claude tenga que acordarse. Solo anota cuando hay un tablero activo, y nunca frena ni hace fallar la sesión. En `~/.claude/settings.json`:
+Un hook `PostToolUse` agrega a la actividad cada archivo que Claude edita, cada comando y cada llamada a un servidor MCP (por ejemplo, Blender), sin que Claude tenga que acordarse. Solo anota si hay un tablero activo con cambios en las últimas 12 h, tapa claves y tokens (`--clave ***`, `API_KEY=***`) y nunca frena ni hace fallar la sesión. En `~/.claude/settings.json`:
 
 ```json
 "hooks": {

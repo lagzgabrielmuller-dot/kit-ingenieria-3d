@@ -167,6 +167,8 @@ def md_a_html(t):
 def cmd_init(a):
     c = os.path.abspath(a.carpeta or os.getcwd())
     os.makedirs(os.path.join(c, '.progreso', 'img'), exist_ok=True)
+    with open(os.path.join(c, '.progreso', '.gitignore'), 'w', encoding='utf-8') as f:
+        f.write('# estado del tablero de progreso: no se sube a git\n*\n')
     plan = [p.strip() for p in (a.plan or '').split('|') if p.strip()]
     e = {'titulo': a.titulo, 'plan': [{'texto': p, 'estado': 'pendiente', 'nota': ''} for p in plan],
          'imagenes': [], 'texto': None, 'pregunta': '', 'actividad': [], 'terminado': False,
@@ -274,19 +276,44 @@ def cmd_simple(a):
     return 0
 
 
+SECRETOS = [
+    (re.compile(r'(?i)(--?(?:clave|key|api[-_]?key|token|password|contrase(?:n|ñ)a|secret)[= ]+)\S+'), r'\1***'),
+    (re.compile(r'(?i)\b([A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD)[A-Z0-9_]*\s*[=:]\s*)\S+'), r'\1***'),
+    (re.compile(r'(?i)(bearer\s+)\S+'), r'\1***'),
+    (re.compile(r'\bsk-[A-Za-z0-9_\-]{12,}'), 'sk-***'),
+    (re.compile(r'\bAIza[0-9A-Za-z_\-]{20,}'), 'AIza***'),
+    (re.compile(r'\bgh[pousr]_[A-Za-z0-9]{20,}'), 'gh_***'),
+]
+VIGENCIA_HOOK_H = 12  # un tablero sin cambios hace mas de 12 h se considera abandonado y el hook no anota
+
+
+def tapar(t):
+    """Tapa claves y tokens antes de mostrarlos (el tablero puede verse en pantalla o en una captura)."""
+    for patron, reemplazo in SECRETOS:
+        t = patron.sub(reemplazo, t)
+    return t
+
+
+def texto_hook(d):
+    h, ti = d.get('tool_name', '?'), d.get('tool_input') or {}
+    ruta = ti.get('file_path') or ti.get('notebook_path')
+    que = os.path.basename(str(ruta)) if ruta else str(ti.get('command') or ti.get('description') or '')
+    que = tapar(re.sub(r'\s+', ' ', que))[:90]
+    return ('%s %s' % (h.replace('mcp__', '').replace('__', ': '), que)).strip()
+
+
 def cmd_hook():
     """Hook PostToolUse de Claude Code: anota la herramienta usada en el tablero activo. Nunca falla."""
     try:
         c = carpeta_activa()
         if not c:
             return 0
-        d = json.loads(sys.stdin.read() or '{}')
-        h, ti = d.get('tool_name', '?'), d.get('tool_input') or {}
-        que = ti.get('file_path') or ti.get('notebook_path') or ti.get('command') or ti.get('description') or ''
-        que = os.path.basename(que) if que and (ti.get('file_path') or ti.get('notebook_path')) else str(que)
-        que = re.sub(r'\s+', ' ', que)[:90]
+        if time.time() - os.path.getmtime(os.path.join(c, '.progreso', 'estado.json')) > VIGENCIA_HOOK_H * 3600:
+            return 0
         e = leer(c)
-        actividad(e, '%s %s' % (h.replace('mcp__', '').replace('__', ': '), que))
+        if e.get('terminado'):
+            return 0
+        actividad(e, texto_hook(json.loads(sys.stdin.read() or '{}')))
         guardar(c, e)
     except Exception:
         pass
@@ -308,8 +335,14 @@ def cmd_demo():
         corre('imagen', svg, '--titulo', 'Vista de frente')
         corre('texto', '--texto', '# Informe\n## Cálculo\n- Carga: **2,5 kN**\n- Tensión: `σ = F/A`', '--titulo', 'Informe (borrador)')
         corre('pregunta', '¿El agujero va de 10 o de 12 mm?')
+        h1 = texto_hook({'tool_name': 'Bash', 'tool_input': {'command': 'guias.py pal-clave gemini --clave AIzaSyA1234567890abcdefghijk'}})
+        h2 = texto_hook({'tool_name': 'mcp__blender__execute_blender_code', 'tool_input': {'code': 'x'}})
+        h3 = texto_hook({'tool_name': 'Edit', 'tool_input': {'file_path': os.path.join(d, 'informe.md')}})
+        hook_ok = ('AIza' not in h1.replace('AIza***', '') and '--clave ***' in h1 and h2 == 'blender: execute_blender_code'
+                   and h3 == 'Edit informe.md')
         e = leer(d)
-        ok = (e['plan'][0]['estado'] == 'hecho' and e['plan'][1]['estado'] == 'en_curso' and len(e['imagenes']) == 1
+        ok = (hook_ok and os.path.isfile(os.path.join(d, '.progreso', '.gitignore'))
+              and e['plan'][0]['estado'] == 'hecho' and e['plan'][1]['estado'] == 'en_curso' and len(e['imagenes']) == 1
               and '<b>2,5 kN</b>' in e['texto']['html'] and e['pregunta'] and os.path.isfile(os.path.join(d, 'progreso.html'))
               and open(os.path.join(d, '.progreso', 'estado.js'), encoding='utf-8').read().startswith('window.PROGRESO'))
         corre('fin', '--nota', 'demo')
