@@ -58,6 +58,8 @@ ffmpeg -framerate 30 -i cuadros/%05d.png ^
 
 `setparams` hace falta: las versiones de ffmpeg de 2026 toman primarios y transferencia de cada cuadro y descartan las opciones `-color_primaries` y `-color_trc` (medido: sin `setparams` quedan "unknown"). En `^` va el corte de línea de Windows (`\` en Linux).
 
+Recetas completas y probadas para YouTube, vertical 9:16 con fondo desenfocado y fondo animado en loop: [references/recetas-exportacion.md](references/recetas-exportacion.md).
+
 ### Codificador
 
 | Opción | Cuándo |
