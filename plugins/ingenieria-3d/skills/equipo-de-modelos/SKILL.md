@@ -13,6 +13,7 @@ Un solo modelo se equivoca sin darse cuenta; otro modelo, que no vio la conversa
 |---|---|---|
 | `codex` (Codex CLI, cuenta de ChatGPT) | Revisión independiente de cálculos, código y diseños; segunda opinión fuerte | Cupo del plan de ChatGPT |
 | `gemini` (Gemini CLI) | Documentos largos, mucho contexto, otra familia de modelos | Gratis con cuenta personal de Google: 60 pedidos por minuto y 1000 por día (README de google-gemini/gemini-cli) |
+| `gemini-api:<modelo>` (API de Gemini) | Lo mismo que Gemini sin instalar nada | Clave de Google AI Studio, con el límite de su plan gratuito; `guias.py estado` lista los modelos |
 | `claude:opus`, `claude:haiku` (otra sesión de Claude Code) | Una mirada sin el sesgo de la charla actual: `opus` para lo difícil, `haiku` para lo rápido | El mismo cupo que Claude |
 | `ollama:<modelo>` (local) | Borradores, resúmenes, textos y datos privados que no deben salir de la compu | Gratis, pero ocupa la GPU; más flojo en cálculos |
 | `openrouter:<id>` | Cientos de modelos con una sola clave | Los `:free` no cobran: 20 pedidos por minuto y 50 por día (1000 por día después de comprar 10 créditos) (openrouter.ai/docs, Limits) |
@@ -20,6 +21,7 @@ Un solo modelo se equivoca sin darse cuenta; otro modelo, que no vio la conversa
 ## Reglas
 
 - **Un solo escritor.** Los guías nunca modifican archivos: Codex corre con `--sandbox read-only`, Gemini con `--approval-mode plan` y Claude con `--permission-mode plan`, que son los modos de solo lectura de cada uno.
+- **Las claves van en la cabecera o en la configuración, nunca en la URL ni en el comando.** `pal-clave` las pide ocultas.
 - **Nada secreto.** No mandar claves, contraseñas, datos personales de otras personas ni datos de clientes. `guias.py` tapa claves y tokens con `***` antes de enviar y se niega a adjuntar `.env`, claves o credenciales, pero qué se manda lo decide Claude.
 - **Un guía opina, no decide.** Si hay diferencias en números, se recalcula con código; no se promedia ni se elige por mayoría.
 - **Decir de dónde viene cada cosa** al usuario: "Codex encontró…", "según Gemini…".
@@ -78,6 +80,7 @@ Con un tablero abierto (**progreso-en-vivo**), dejar el resultado en una nota de
 | Guía | Cómo se suma |
 |---|---|
 | Gemini CLI | `npm install -g @google/gemini-cli`, correr `gemini` una vez y elegir "Sign in with Google" (el usuario inicia sesión) |
+| Gemini por API | Crear una clave en Google AI Studio y guardarla con `guias.py pal-clave gemini` (sirve también para PAL) |
 | OpenRouter | Crear una clave en openrouter.ai y guardarla con `guias.py pal-clave openrouter`; elegir un modelo terminado en `:free` |
 | Modelo local | `ollama pull <modelo>` (avisar el tamaño antes de bajar); probar con `guias.py preguntar ollama:<modelo> "..."` |
 
@@ -91,4 +94,4 @@ Con un tablero abierto (**progreso-en-vivo**), dejar el resultado en una nota de
 
 ## Verificación
 
-`python guias.py demo` tiene que terminar en `DEMO OK`. Prueba sin gastar cuota: adjuntos prohibidos, informe, claves tapadas sin tocar el texto técnico, descarga del modelo local (con un Ollama simulado) y `pal-clave` sobre una copia. Probado en Windows 11 con respuestas reales de Codex CLI 0.166 y Claude Code 2.1, y con Ollama (lista de modelos y freno con un juego abierto). Gemini CLI y OpenRouter siguen su documentación oficial: confirmar con `guias.py estado` y una consulta corta en el primer uso.
+`python guias.py demo` tiene que terminar en `DEMO OK`. Prueba sin gastar cuota: adjuntos prohibidos, informe, claves tapadas sin tocar el texto técnico, descarga del modelo local (con un Ollama simulado) y `pal-clave` sobre una copia. Probado en Windows 11 con respuestas reales de Codex CLI 0.166 y Claude Code 2.1, y con Ollama (lista de modelos y freno con un juego abierto). Gemini (CLI y API) y OpenRouter siguen su documentación oficial (la API de Gemini, además, con un servidor simulado en el demo): confirmar con `guias.py estado` y una consulta corta en el primer uso.

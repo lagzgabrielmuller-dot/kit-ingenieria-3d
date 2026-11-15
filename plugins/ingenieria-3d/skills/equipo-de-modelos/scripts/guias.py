@@ -4,6 +4,7 @@
 Claude lidera y es el unico que escribe; los guias leen y opinan. Guias:
   codex              Codex CLI (OpenAI, con la sesion de ChatGPT), en solo lectura
   gemini[:modelo]    Gemini CLI (Google, con la cuenta de Google o GEMINI_API_KEY), en modo plan (solo lectura)
+  gemini-api:MODELO  Gemini por su API, con GEMINI_API_KEY (sin instalar nada; `estado` lista los modelos)
   claude[:modelo]    Claude Code (claude -p) en modo plan; gasta el mismo cupo que Claude
   ollama:MODELO      modelo local de Ollama: gratis y privado, pero usa la GPU
   openrouter:ID      cualquier modelo de OpenRouter (clave OPENROUTER_API_KEY; los ':free' no cobran, con limite diario)
@@ -43,6 +44,7 @@ import tempfile
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 
 ES_WIN = os.name == 'nt'
@@ -311,6 +313,38 @@ def guia_openrouter(texto, modelo, a):
         raise GuiaError('respuesta inesperada de OpenRouter: %s' % json.dumps(r)[:300])
 
 
+def url_gemini():
+    return os.environ.get('GUIAS_GEMINI_URL', 'https://generativelanguage.googleapis.com').rstrip('/')
+
+
+def modelos_gemini(clave):
+    r = http_json(url_gemini() + '/v1beta/models?pageSize=200', tiempo=15, cabeceras={'x-goog-api-key': clave})
+    return [m['name'].split('/', 1)[-1] for m in r.get('models', [])
+            if 'generateContent' in (m.get('supportedGenerationMethods') or []) and 'gemini' in m.get('name', '')]
+
+
+def guia_gemini_api(texto, modelo, a):
+    if not modelo:
+        raise UsoError('falta el modelo: gemini-api:<modelo> (`guias.py estado` lista los disponibles)')
+    clave = clave_de('GEMINI_API_KEY')
+    if not clave:
+        raise GuiaError('falta la clave: `guias.py pal-clave gemini` (o la variable GEMINI_API_KEY)')
+    url = '%s/v1beta/models/%s:generateContent' % (url_gemini(), urllib.parse.quote(modelo, safe='-._'))
+    r = http_json(url, {'contents': [{'role': 'user', 'parts': [{'text': texto}]}]}, tiempo=a.tiempo,
+                  cabeceras={'x-goog-api-key': clave})  # la clave va en la cabecera, nunca en la URL
+    bloqueo = (r.get('promptFeedback') or {}).get('blockReason')
+    if bloqueo:
+        raise GuiaError('Gemini rechazó el pedido (%s)' % bloqueo)
+    try:
+        partes = r['candidates'][0]['content']['parts']
+    except (KeyError, IndexError, TypeError):
+        raise GuiaError('respuesta inesperada de Gemini: %s' % json.dumps(r)[:300])
+    respuesta = ''.join(p.get('text', '') for p in partes if not p.get('thought')).strip()
+    if not respuesta:
+        raise GuiaError('Gemini devolvió una respuesta vacía')
+    return respuesta
+
+
 def guia_eco(texto, modelo, a):
     return 'eco: recibí %d caracteres.\n\n%s' % (len(texto), texto)
 
@@ -319,7 +353,7 @@ def guia_eco_falla(texto, modelo, a):
     raise GuiaError('falla de prueba')
 
 
-GUIAS = {'codex': guia_codex, 'gemini': guia_gemini, 'claude': guia_claude, 'ollama': guia_ollama,
+GUIAS = {'codex': guia_codex, 'gemini': guia_gemini, 'gemini-api': guia_gemini_api, 'claude': guia_claude, 'ollama': guia_ollama,
          'openrouter': guia_openrouter, 'eco': guia_eco, 'eco-falla': guia_eco_falla}
 
 
@@ -457,6 +491,15 @@ def cmd_estado(a):
     else:
         filas.append(('gemini', 'falta', 'npm install -g @google/gemini-cli; después `gemini` y "Sign in with Google" '
                       '(gratis: 60 pedidos/min y 1000/día)'))
+    clave = clave_de('GEMINI_API_KEY')
+    if clave:
+        try:
+            mods = modelos_gemini(clave)
+            filas.append(('gemini-api', 'listo', ', '.join(mods[:8]) + ('…' if len(mods) > 8 else '') + '  → gemini-api:<modelo>'))
+        except GuiaError as ex:
+            filas.append(('gemini-api', 'error', str(ex)[:200]))
+    else:
+        filas.append(('gemini-api', 'sin clave', '`guias.py pal-clave gemini` (clave gratis de Google AI Studio)'))
     exe = shutil.which('claude')
     filas.append(('claude', 'listo' if exe else 'falta', ((salida_de([exe, '--version']).splitlines() or ['?'])[0] +
                   ' · gasta el mismo cupo que Claude') if exe else 'https://claude.com/claude-code'))
@@ -560,7 +603,10 @@ class OllamaFalso(http.server.BaseHTTPRequestHandler):
         self.wfile.write(b)
 
     def do_GET(self):
-        if self.path == '/api/tags':
+        if self.path.startswith('/v1beta/models'):
+            OllamaFalso.clave_gemini = self.headers.get('x-goog-api-key')
+            self.responder({'models': [{'name': 'models/gemini-prueba', 'supportedGenerationMethods': ['generateContent']}]})
+        elif self.path == '/api/tags':
             self.responder({'models': [{'name': 'prueba:latest'}]})
         else:
             self.responder({'models': []})
@@ -568,16 +614,23 @@ class OllamaFalso(http.server.BaseHTTPRequestHandler):
     def do_POST(self):
         largo = int(self.headers.get('Content-Length', 0))
         cuerpo = json.loads(self.rfile.read(largo).decode('utf-8'))
+        if self.path.startswith('/v1beta/models/'):
+            OllamaFalso.ruta_gemini, OllamaFalso.clave_gemini = self.path, self.headers.get('x-goog-api-key')
+            self.responder({'candidates': [{'content': {'parts': [{'text': 'pienso…', 'thought': True},
+                                                                  {'text': 'Gemini: de acuerdo, 50 MPa.'}]}}]})
+            return
         OllamaFalso.ultimo = cuerpo
         self.responder({'message': {'role': 'assistant', 'content': 'De acuerdo: 50 MPa.'}})
 
 
 def cmd_demo():
     d = tempfile.mkdtemp(prefix='guias_demo_')
-    viejo_host = os.environ.get('OLLAMA_HOST')
+    viejos = {k: os.environ.get(k) for k in ('OLLAMA_HOST', 'GUIAS_GEMINI_URL', 'GEMINI_API_KEY')}
     servidor = http.server.HTTPServer(('127.0.0.1', 0), OllamaFalso)
     threading.Thread(target=servidor.serve_forever, daemon=True).start()
     os.environ['OLLAMA_HOST'] = '127.0.0.1:%d' % servidor.server_port
+    os.environ['GUIAS_GEMINI_URL'] = 'http://127.0.0.1:%d' % servidor.server_port
+    os.environ['GEMINI_API_KEY'] = 'AIzaPRUEBA' + 'x' * 29
     chequeos = []
     try:
         adj = os.path.join(d, 'calculo.md')
@@ -602,6 +655,13 @@ def cmd_demo():
                          and 'AIzaSy' not in json.dumps(OllamaFalso.ultimo)))
         chequeos.append(('el texto técnico no se toca', 'Chaveta (key): 8 x 7 mm' in txt and '50 MPa' in txt))
         chequeos.append(('un modelo local no queda cargado', OllamaFalso.ultimo.get('keep_alive') == 0))
+        sal = os.path.join(d, 'gemini.md')
+        rc = main(['preguntar', 'gemini-api:gemini-prueba', '¿Está bien 50 MPa?', '--salida', sal], silencio=True)
+        with open(sal, encoding='utf-8') as f:
+            g = f.read()
+        chequeos.append(('gemini-api responde, sin el razonamiento y con la clave en la cabecera',
+                         rc == 0 and g.strip() == 'Gemini: de acuerdo, 50 MPa.' and 'key=' not in OllamaFalso.ruta_gemini
+                         and OllamaFalso.clave_gemini.startswith('AIzaPRUEBA')))
         rc = main(['consejo', 'x', '--guias', 'eco-falla', '--salida', os.path.join(d, 'i2.md')], silencio=True)
         chequeos.append(('sin respuestas devuelve 1', rc == 1))
         cfg = os.path.join(d, 'claude.json')
@@ -626,10 +686,11 @@ def cmd_demo():
     finally:
         servidor.shutdown()
         os.environ.pop('GUIAS_CLAVE', None)
-        if viejo_host is None:
-            os.environ.pop('OLLAMA_HOST', None)
-        else:
-            os.environ['OLLAMA_HOST'] = viejo_host
+        for k, v in viejos.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
         shutil.rmtree(d, ignore_errors=True)
     for nombre, ok in chequeos:
         print('  %s %s' % ('ok ' if ok else 'MAL', nombre))
