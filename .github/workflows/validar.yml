@@ -38,3 +38,10 @@ jobs:
         run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends ffmpeg
       - name: El demo de video-calidad anda
         run: cd /tmp && python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/video-calidad/scripts/video_calidad.py" demo | tail -3
+      - name: Validador oficial de Claude Code (manifiestos y skills)
+        run: |
+          npm install -g --silent @anthropic-ai/claude-code
+          claude plugin validate .
+          for p in plugins/*/; do
+            claude plugin validate "$p" > /tmp/val.txt 2>&1 || { cat /tmp/val.txt; exit 1; }
+          done
