@@ -1,6 +1,6 @@
 # Kit de ingeniería y diseño 3D para Claude
 
-Marketplace de plugins con **336 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
+Marketplace de plugins con **337 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
 
 Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comunidad, copiadas sin cambios desde sus repos con sus licencias y créditos (cada plugin tiene su `CREDITOS.md` y su carpeta `licencias/`).
 
@@ -8,7 +8,7 @@ Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comuni
 
 | Plugin | Skills | Para qué sirve |
 |---|---:|---|
-| `ingenieria-3d` | 15 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, Blender y FreeCAD y consultas a Codex |
+| `ingenieria-3d` | 16 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, Blender y FreeCAD y consultas a Codex |
 | `cad-3d-comunidad` | 16 | build123d, ensambles sin interferencias, render de GLB, fabricabilidad (CNC, chapa, inyección), impresión 3D, piezas en STEP, OpenSCAD y automatización de SolidWorks, Fusion 360, CATIA, NX y Rhino |
 | `fluidos-bombas-termo` | 31 | Bombas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías, CoolProp y thermo, unidades, OpenFOAM, ANSYS Fluent, COMSOL |
 | `ciencia-y-calculo` | 26 | SymPy, gráficos, incertidumbre de mediciones, estadística, análisis de datos, scikit-learn, grafos, SimPy, optimización, Octave, redacción técnica, bibliografía y pósters |
@@ -85,8 +85,9 @@ Los nombres de los menús pueden aparecer en español.
 | `simulador-educativo` | Simuladores de una sola página que andan sin internet, para corroborar un ensayo o un cálculo: parámetros, gráfico, animación, modo laboratorio con mediciones y exportar CSV/PNG. Plantilla probada con Playwright |
 | `exposicion-oral` | Defensas y exposiciones en grupo: reparto por tiempos, guion hablado, tarjetas, Pecha Kucha, panel de expertos, banco de preguntas probables con respuesta y checklist del día |
 | `revision-tecnica` | Control independiente antes de entregar: rehace las cuentas (`verificar_numeros.py`), revisa unidades, normas, citas, coherencia y consigna, y pasa el archivo final por `revisar_documento.py` (marcadores sin completar, nombres escritos de dos formas, tablas incompletas, texto que quedó) |
+| `video-calidad` | Control de calidad de videos antes de entregarlos: color BT.709 con etiquetas (evita rojos anaranjados en YouTube), negros y congelados, silencios, volumen en LUFS, costura de loops y hoja de contacto. `video_calidad.py` revisa, normaliza el audio y corrige el color |
 
-Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`) usan solo Python 3.9 o más. Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
+Requisitos de los scripts propios: `pip install ezdxf pymupdf cadquery trimesh matplotlib` para planos y 3D. Las calculadoras nuevas (`maquinas.py`, `ensayos.py`, `neumatica.py`, `cnc.py`, `verificar_numeros.py`, `revisar_documento.py`) usan solo Python 3.9 o más; `video_calidad.py` necesita además `ffmpeg`. Cada script trae un ejemplo: `python lamina_a3.py demo salida`, `python maquinas.py demo`, etc.
 
 ## Skills de la comunidad
 

@@ -1,12 +1,12 @@
 {
   "name": "ingenieria-3d",
   "displayName": "Ingeniería y diseño 3D",
-  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D, visores 3D interactivos, informes técnicos, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales y revisión técnica para electromecánica.",
+  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D, visores 3D interactivos, informes técnicos, memorias de cálculo, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica y control de calidad de videos para electromecánica.",
   "author": {
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"
   },
   "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
   "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
-  "keywords": ["3d", "aea", "autocad", "blender", "cad", "cnc", "dxf", "electromecanica", "ensayos", "exposicion", "fusion-360", "grafcet", "iram", "maquinas-electricas", "neumatica", "normas", "planos", "revision", "simulador", "solidworks", "step", "three.js"]
+  "keywords": ["3d", "aea", "autocad", "blender", "cad", "cnc", "dxf", "electromecanica", "ensayos", "exposicion", "ffmpeg", "fusion-360", "grafcet", "iram", "maquinas-electricas", "neumatica", "normas", "planos", "revision", "simulador", "solidworks", "step", "three.js", "video"]
 }

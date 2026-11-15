@@ -34,3 +34,7 @@ jobs:
           done
           echo "== simulador-educativo/scripts/validar_modelo_kloss.py"
           python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/simulador-educativo/scripts/validar_modelo_kloss.py" /tmp/casos.json > /dev/null
+      - name: ffmpeg (para el demo de video-calidad)
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends ffmpeg
+      - name: El demo de video-calidad anda
+        run: cd /tmp && python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/video-calidad/scripts/video_calidad.py" demo | tail -3
