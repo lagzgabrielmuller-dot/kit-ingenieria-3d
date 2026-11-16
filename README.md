@@ -1,6 +1,6 @@
 # Kit de ingeniería y diseño 3D para Claude
 
-Marketplace de plugins con **345 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
+Marketplace de plugins con **355 skills** para trabajos de electromecánica, diseño 3D, electrónica y automatización. Una vez instalado un plugin, Claude usa cada skill sola cuando el pedido encaja; no hace falta nombrarla.
 
 Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comunidad, copiadas sin cambios desde sus repos con sus licencias y créditos (cada plugin tiene su `CREDITOS.md` y su carpeta `licencias/`).
 
@@ -8,7 +8,7 @@ Hay un plugin propio (`ingenieria-3d`) y catorce armados con skills de la comuni
 
 | Plugin | Skills | Para qué sirve |
 |---|---:|---|
-| `ingenieria-3d` | 24 | **Propio.** Planos IRAM, modelos 3D, visores 3D, informes (también en Google Docs, en vivo), memorias de cálculo, instalaciones eléctricas, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación, render de presentación y modelado en vivo en Blender, tablero de progreso en vivo, conexión con Blender, Fusion 360 y FreeCAD, consultas a Codex y equipo de modelos guía (Codex, Gemini, Claude, Ollama, OpenRouter) |
+| `ingenieria-3d` | 34 | **Propio.** Cálculo electromecánico (instalaciones eléctricas, máquinas eléctricas, energía solar, elementos de máquinas, resistencia de materiales, tolerancias y ajustes, neumática, oleohidráulica, maniobra y transporte, transferencia de calor, secado, refrigeración, CNC y ensayos), gestión (mantenimiento, organización industrial, higiene y seguridad, normas argentinas), planos IRAM, modelos y visores 3D, Blender en vivo y control de modelos, informes (también en Google Docs, en vivo) y memorias de cálculo, simuladores, exposiciones, revisión técnica, control de videos, tablero de progreso y equipo de modelos guía (Codex, Gemini, Claude, Ollama, OpenRouter) |
 | `cad-3d-comunidad` | 16 | build123d, ensambles sin interferencias, render de GLB, fabricabilidad (CNC, chapa, inyección), impresión 3D, piezas en STEP, OpenSCAD y automatización de SolidWorks, Fusion 360, CATIA, NX y Rhino |
 | `fluidos-bombas-termo` | 31 | Bombas, curvas H-Q, NPSH y cavitación, pérdidas en cañerías, CoolProp y thermo, unidades, OpenFOAM, ANSYS Fluent, COMSOL |
 | `ciencia-y-calculo` | 26 | SymPy, gráficos, incertidumbre de mediciones, estadística, análisis de datos, scikit-learn, grafos, SimPy, optimización, Octave, redacción técnica, bibliografía y pósters |
@@ -75,10 +75,17 @@ Los nombres de los menús pueden aparecer en español.
 | `calculos-ingenieria` | Memorias de cálculo: iluminación, aire comprimido, conductores, motores, cintas y balances de masa y energía |
 | `instalaciones-electricas` | Corriente de proyecto, caída de tensión y sección mínima, corrección del factor de potencia, cortocircuito de un transformador y sección térmica, jabalina de puesta a tierra e iluminación por lúmenes, con memoria de cálculo (`electricas.py`) |
 | `maquinas-electricas` | Transformadores (ensayos de vacío y cortocircuito, regulación, rendimiento, Dyn11, paralelo), motor asincrónico (placa, cupla, Kloss, arranques directo, estrella-triángulo, autotransformador, arrancador suave, variador, clases IE), monofásicos y Steinmetz, máquina sincrónica y de continua. Calculadora `maquinas.py` |
+| `energia-solar-fotovoltaica` | Sistemas fotovoltaicos aislados y conectados a la red: horas de sol pico, consumos, paneles en serie y paralelo con corrección por temperatura, regulador PWM o MPPT, baterías, inversor, cables y protecciones, energía anual y Ley 27.424 (`fotovoltaica.py`) |
 | `elementos-de-maquinas` | Tornillos (ISO 898-1, precarga y torque), ejes a fatiga (Goodman) y fluencia, chavetas DIN 6885-1, rodamientos (L10), correas en V, cadenas, engranajes rectos (Lewis) y soldadura en filete, con memoria de cálculo; reproduce un ejemplo de Shigley (`elementos.py`) |
+| `resistencia-de-materiales` | Resistencia de materiales: tracción, corte, torsión, vigas (reacciones, diagramas y flecha por integración numérica), pandeo (Euler y Tetmajer), círculo de Mohr y von Mises, secciones y perfiles IPN, UPN y ángulos, con datos del CIRSOC (`resistencia.py`) |
+| `tolerancias-y-ajustes` | Tolerancias y ajustes: sistema ISO 286 (grados IT, desviaciones, juego y aprieto), ajustes recomendados, tolerancias generales ISO 2768, tolerancias geométricas, rugosidad, cadenas de cotas y metrología con calibre, micrómetro e incertidumbre (`tolerancias.py`) |
 | `ensayos-materiales` | Tracción, dureza Brinell, Rockwell y Vickers, Charpy, doblado y plegado, fatiga y ensayos no destructivos, con informe de laboratorio e incertidumbre. Calculadora `ensayos.py` (lee el CSV de la máquina de tracción) |
 | `neumatica-electroneumatica` | Circuitos neumáticos y electroneumáticos (FluidSIM o tablero): símbolos ISO 1219, secuencias, cascada, paso a paso, relés, GRAFCET y paso a PLC, cilindros y pandeo. Calculadora `neumatica.py` (arma la cascada desde la secuencia) |
+| `oleohidraulica` | Oleohidráulica: cilindros (fuerza, presión, velocidades, diámetro normalizado ISO 3320, pandeo del vástago), bombas y motores, viscosidad del aceite, mangueras y pérdida de carga, acumuladores, tanque, calor, válvulas y circuitos ISO 1219 (`oleohidraulica.py`) |
+| `maniobra-y-transporte` | Maniobra y transporte: cintas transportadoras (CEMA y DIN 22101), tornillos sinfín, elevadores de cangilones, aparejos, cables de acero, eslingas, puentes grúa y autoelevadores, con el Decreto 351/79 para aparatos de izar (`transporte.py`) |
+| `transferencia-de-calor` | Transferencia de calor: paredes y caños multicapa, convección natural y forzada con propiedades del aire y del agua, radiación, coeficiente U, intercambiadores (LMTD y ε-NTU), aletas y espesor de aislación de hornos, secaderos, tanques y cañerías (`calor.py`) |
 | `secado-y-psicrometria` | Aire húmedo (HR, W, entalpía, rocío, bulbo húmedo, altitud) y secaderos de aire caliente: agua a evaporar, caudal del ventilador, potencia del calentador, combustible, recirculación y diagrama psicrométrico en SVG; verificado contra CoolProp (`psicrometria.py`) |
+| `refrigeracion-y-aire-acondicionado` | Refrigeración y aire acondicionado: ciclo de compresión y COP, tablas presión-temperatura de siete refrigerantes (R-134a, R-410A, R-32, R-22, R-600a, R-290, R-404A), diagnóstico por sobrecalentamiento y subenfriamiento, vacío y carga de gas, carga térmica en W y frigorías/h (`refrigeracion.py`) |
 | `cnc-mecanizado` | Programación CNC de torno y fresadora (estilo Fanuc, con notas de controles GSK), ciclos, compensaciones, datos de corte, hoja de proceso y simulación. `cnc.py` calcula corte, genera un perfil de torneado y revisa programas .nc |
 
 ### Normas, gestión y seguridad
@@ -86,6 +93,9 @@ Los nombres de los menús pueden aparecer en español.
 | Skill | Para qué sirve |
 |---|---|
 | `normas-tecnicas-ar` | Mapa de normas argentinas: AEA 90364, IRAM-AADL J 20-06, Ley 19.587 y Dec. 351/79 con sus resoluciones, serie IRAM 4500 de dibujo, ISO 1219, aceros, ambiente y aparatos a presión por provincia; valores clave con su fuente y cómo citar en APA 7 |
+| `higiene-y-seguridad` | Higiene y seguridad en Argentina (Ley 19.587, Decreto 351/79 y resoluciones de la SRT): carga de fuego y matafuegos, clases de fuego, ruido y dosis, estrés térmico, ventilación, riesgo eléctrico, máquinas, EPP y matriz de riesgos (`seguridad.py`) |
+| `mantenimiento-industrial` | Mantenimiento: estrategias (correctivo, preventivo, predictivo, TPM, RCM), MTBF, MTTR, disponibilidad, confiabilidad y OEE, Pareto, Ishikawa y AMFE, plan preventivo y órdenes de trabajo, lubricación de rodamientos, vibraciones ISO 20816-3, termografía, alineación, balanceo y bloqueo (`mantenimiento.py`) |
+| `organizacion-industrial` | Organización industrial: costos y punto de equilibrio, amortización, VAN, TIR y recupero en moneda constante, estudio de métodos y tiempos con los suplementos de la OIT, capacidad y balanceo de línea, layout, Gantt y PERT/CPM, gráficos de control y Cp/Cpk (`organizacion.py`) |
 
 ### Planos, 3D y video
 

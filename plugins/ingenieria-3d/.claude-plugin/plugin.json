@@ -1,12 +1,12 @@
 {
   "name": "ingenieria-3d",
   "displayName": "Ingeniería y diseño 3D",
-  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D, visores 3D interactivos, informes técnicos (también en Google Docs, en vivo), memorias de cálculo, instalaciones eléctricas, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación, render de presentación y modelado en vivo de modelos de Blender, tablero de progreso en vivo y equipo de modelos guía para electromecánica.",
+  "description": "Calculadoras y guías para electromecánica: instalaciones eléctricas, máquinas eléctricas, energía solar, elementos de máquinas, resistencia de materiales, tolerancias y ajustes, neumática, oleohidráulica, maniobra y transporte, transferencia de calor, secado, refrigeración, CNC, ensayos, mantenimiento, organización industrial, higiene y seguridad y normas argentinas; planos IRAM, modelos y visores 3D, Blender en vivo, informes técnicos (también en Google Docs, en vivo), memorias de cálculo, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, tablero de progreso en vivo y equipo de modelos guía.",
   "author": {
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"
   },
   "homepage": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
   "repository": "https://github.com/lagzgabrielmuller-dot/kit-ingenieria-3d",
-  "keywords": ["3d", "aea", "autocad", "blender", "cad", "cnc", "dxf", "electromecanica", "ensayos", "exposicion", "ffmpeg", "fusion-360", "grafcet", "iram", "maquinas-electricas", "neumatica", "normas", "planos", "revision", "simulador", "solidworks", "step", "three.js", "video"]
+  "keywords": ["3d", "aea", "autocad", "blender", "cad", "calor", "cnc", "dxf", "electromecanica", "en-vivo", "ensayos", "exposicion", "ffmpeg", "fusion-360", "google-docs", "grafcet", "iram", "mantenimiento", "maquinas-electricas", "neumatica", "normas", "oleohidraulica", "organizacion-industrial", "planos", "refrigeracion", "resistencia-de-materiales", "revision", "seguridad", "simulador", "solar", "solidworks", "step", "three.js", "tolerancias", "transporte", "video"]
 }

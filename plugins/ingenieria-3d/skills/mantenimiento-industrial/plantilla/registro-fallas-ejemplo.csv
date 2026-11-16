@@ -1,0 +1,10 @@
+fecha;equipo;causa;reparacion_h;espera_h
+2026-03-03;Llenadora;Válvulas de llenado (goteo);1,5;0,5
+2026-03-05;Tapadora;Embrague del cabezal;2,0;0,5
+2026-03-09;Etiquetadora;Sensor de etiqueta;0,75;0
+2026-03-11;Llenadora;Válvulas de llenado (goteo);1,5;0,5
+2026-03-16;Transportador;Cadena trabada;3,0;1,0
+2026-03-18;Encajonadora;Ventosas;1,0;0,5
+2026-03-23;Tapadora;Embrague del cabezal;2,0;0,5
+2026-03-25;Etiquetadora;Sensor de etiqueta;0,75;0
+2026-03-30;Llenadora;Válvulas de llenado (goteo);1,0;1,0

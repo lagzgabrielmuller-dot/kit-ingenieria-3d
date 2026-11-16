@@ -16,6 +16,31 @@ description: "Cálculos de ingeniería electromecánica presentados como en una 
 
 Las cuentas se hacen con código (Python), nunca de cabeza, y el script queda como anexo si suma. Si la consigna fija valores (pérdida de carga admisible, factores, nomenclatura de la cátedra), se usan esos aunque difieran de los típicos.
 
+## Calculadoras del kit
+
+Antes de programar una cuenta desde cero, conviene usar la calculadora probada de la skill del tema. Cada una está en `scripts/` de su skill, tiene `--help` y un `demo` que reproduce un ejemplo resuelto.
+
+| Tema | Skill | Script |
+|---|---|---|
+| Corriente, caída de tensión, sección, factor de potencia, cortocircuito, jabalina, iluminación | **instalaciones-electricas** | `electricas.py` |
+| Transformadores, motor asincrónico, máquina sincrónica y de continua | **maquinas-electricas** | `maquinas.py` |
+| Energía solar fotovoltaica | **energia-solar-fotovoltaica** | `fotovoltaica.py` |
+| Tornillos, ejes, chavetas, rodamientos, correas, cadenas, engranajes, soldadura | **elementos-de-maquinas** | `elementos.py` |
+| Vigas, torsión, pandeo, círculo de Mohr, secciones | **resistencia-de-materiales** | `resistencia.py` |
+| Ajustes ISO 286, tolerancias generales, cadenas de cotas | **tolerancias-y-ajustes** | `tolerancias.py` |
+| Tracción, dureza, Charpy, doblado | **ensayos-materiales** | `ensayos.py` |
+| Neumática: cilindros, consumo de aire, secuencias | **neumatica-electroneumatica** | `neumatica.py` |
+| Oleohidráulica: cilindros, bombas, cañerías | **oleohidraulica** | `oleohidraulica.py` |
+| Cintas, tornillos sinfín, cangilones, cables y eslingas | **maniobra-y-transporte** | `transporte.py` |
+| Conducción, convección, aislación, intercambiadores | **transferencia-de-calor** | `calor.py` |
+| Aire húmedo y secaderos | **secado-y-psicrometria** | `psicrometria.py` |
+| Refrigeración y aire acondicionado | **refrigeracion-y-aire-acondicionado** | `refrigeracion.py` |
+| Indicadores y planes de mantenimiento | **mantenimiento-industrial** | `mantenimiento.py` |
+| Costos, VAN y TIR, tiempos, camino crítico, control de calidad | **organizacion-industrial** | `organizacion.py` |
+| Carga de fuego, dosis de ruido, matriz de riesgos | **higiene-y-seguridad** | `seguridad.py` |
+| Datos de corte y programas CNC | **cnc-mecanizado** | `cnc.py` |
+| Rehacer las cuentas de un informe terminado | **revision-tecnica** | `verificar_numeros.py` |
+
 ## Recetas
 
 **Iluminación interior (método de los lúmenes)**
@@ -42,7 +67,7 @@ Las cuentas se hacen con código (Python), nunca de cabeza, y el script queda co
 - P = T·ω, con ω = 2π·n/60. Potencia del motor = potencia de la carga / rendimiento de la transmisión, con factor de servicio.
 - Relación: i = n1/n2 = d2/d1 (poleas) = z2/z1 (engranajes).
 - Potencias normalizadas IEC (kW): 0,37 · 0,55 · 0,75 · 1,1 · 1,5 · 2,2 · 3 · 4 · 5,5 · 7,5 · 11 · 15 · 18,5 · 22 · 30 · 37 · 45 · 55 · 75.
-- Cinta transportadora: capacidad Q [t/h] = 3600·A [m²]·v [m/s]·ρ [t/m³]; la potencia, con el método del fabricante de la banda o de los rodillos.
+- Cinta transportadora: capacidad Q [t/h] = 3600·A [m²]·v [m/s]·ρ [t/m³]; la potencia, con el método del fabricante de la banda o de los rodillos (método completo en **maniobra-y-transporte**).
 
 **Balances de masa y energía (secado, calentamiento, combustión)**
 - Agua a evaporar (humedad en base húmeda): m_agua = m_h·(wi − wf)/(1 − wf).

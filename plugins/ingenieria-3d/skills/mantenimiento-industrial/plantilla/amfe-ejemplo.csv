@@ -1,0 +1,5 @@
+componente;modo;efecto;causa;control;S;O;D;accion;S2;O2;D2
+Motor principal (rodamiento lado acople);Rodamiento dañado;Parada de 4 a 8 h para cambiarlo;Relubricación sin plan;Ninguno: se detecta por ruido;7;4;8;Plan de relubricación (método SKF) y medición mensual de vibraciones con alarma;7;3;3
+Válvulas de llenado;Junta desgastada: la válvula gotea;Envases con bajo nivel y parada de 1 a 4 h;Juntas que se cambian solo cuando fallan;Inspección visual al inicio del turno;6;7;5;Cambio preventivo de juntas cada 250 h y control de nivel en la planilla;6;4;4
+Sensor de nivel (fotocélula);Lente sucia o desalineada;Pasan envases mal llenados durante 1 a 2 h;Salpicaduras de producto y limpieza no programada;Control de peso por muestreo cada 2 h;6;5;6;Limpieza y prueba con envase patrón en cada cambio de turno;6;3;3
+Cadena de la estrella de transferencia;Cadena estirada o sin lubricar;Trabado y parada de 1 a 4 h;Lubricación irregular;Inspección semanal;6;5;4;Lubricación en la ruta diaria y medición mensual del estiramiento;6;3;4
