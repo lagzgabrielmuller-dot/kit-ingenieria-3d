@@ -1,7 +1,7 @@
 {
   "name": "ingenieria-3d",
   "displayName": "Ingeniería y diseño 3D",
-  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D, visores 3D interactivos, informes técnicos, memorias de cálculo, instalaciones eléctricas, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación y render de presentación de modelos de Blender, tablero de progreso en vivo y equipo de modelos guía para electromecánica.",
+  "description": "Planos DXF y PDF A3 según IRAM, modelos 3D, visores 3D interactivos, informes técnicos (también en Google Docs, en vivo), memorias de cálculo, instalaciones eléctricas, elementos de máquinas, secado y psicrometría, máquinas eléctricas, ensayos de materiales, normas argentinas, neumática, CNC, simuladores, exposiciones orales, revisión técnica, control de calidad de videos, verificación, render de presentación y modelado en vivo de modelos de Blender, tablero de progreso en vivo y equipo de modelos guía para electromecánica.",
   "author": {
     "name": "lagzgabrielmuller-dot",
     "url": "https://github.com/lagzgabrielmuller-dot"

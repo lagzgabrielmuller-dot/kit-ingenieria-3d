@@ -1,18 +1,28 @@
 #!/usr/bin/env python3
 """validar_kit.py: revisa que el marketplace y todas sus skills estén bien armados.
 
-  python scripts/validar_kit.py            revisa todo y muestra un resumen
-  python scripts/validar_kit.py --conteo   además, la tabla de skills por plugin (para el README)
+  python scripts/validar_kit.py                       revisa todo y muestra un resumen
+  python scripts/validar_kit.py --conteo              además, la tabla de skills por plugin (para el README)
+  python scripts/validar_kit.py --conteo --completo   el control de antes de commitear (lo corre GitHub Actions)
 
-Qué revisa:
+Qué revisa siempre:
 - .claude-plugin/marketplace.json: JSON válido, nombres únicos, que cada "source" exista.
 - plugins/<p>/.claude-plugin/plugin.json: JSON válido, mismo nombre que en el marketplace,
   y que existan las rutas de su campo "skills" (si lo tiene).
 - Cada SKILL.md: frontmatter con name y description; name en minúsculas, números y guiones,
   de hasta 64 caracteres, sin "claude" ni "anthropic"; description de hasta 1024 caracteres
-  y sin etiquetas XML; en el plugin propio, además, name igual a la carpeta.
+  y sin etiquetas XML; en el plugin propio, además, name igual a la carpeta, description entre
+  comillas y sin < ni >, y SKILL.md de hasta 260 líneas (aviso).
 - Skills con el mismo nombre en dos plugins (compiten entre sí).
 - Que no haya archivos .zip, .env ni claves con formato conocido (el repo es público).
+
+Con --completo, además (en el plugin propio):
+- Que el README.md esté al día: el total de skills, la tabla de plugins y la de skills propias.
+- Que cada skill nombrada en negrita (**nombre-con-guiones**) exista en el kit.
+- Que los links relativos de los .md lleven a un archivo que existe.
+- Que no queden __pycache__ ni .pyc.
+- Que el demo de cada script lo pase: lo corre con python -I en una carpeta temporal. Los que
+  necesitan Blender se saltean; si falta una biblioteca o ffmpeg, queda un aviso en vez de un error.
 
 Los problemas del plugin propio son errores; los de las skills de la comunidad son avisos,
 porque se copian sin modificar (se arreglan en su repo de origen). Sale con código 1 si hay errores.
@@ -22,8 +32,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -37,6 +51,12 @@ CLAVES = [
     (re.compile(r"\b\d{8,10}:AA[A-Za-z0-9_-]{33}\b"), "token de bot de Telegram"),
     (re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"), "clave privada"),
 ]
+MAX_LINEAS_SKILL = 260
+NEGRITA_SKILL = re.compile(r"\*\*([a-z0-9]+(?:-[a-z0-9]+)+)\*\*")
+LINK_MD = re.compile(r"!?\[[^\]\n]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
+BLOQUE_CODIGO = re.compile(r"^(`{3,}|~{3,})[^\n]*\n.*?^\1[^\n]*$", re.M | re.S)
+CODIGO_EN_LINEA = re.compile(r"`[^`\n]*`")
+TIENE_DEMO = re.compile(r"""add_parser\(\s*["']demo["']|==\s*\[?\s*["']demo["']""")
 EXTENSIONES_TEXTO = {".md", ".py", ".js", ".ts", ".json", ".yaml", ".yml", ".toml", ".txt", ".sh", ".ps1", ".html", ".mmd", ".scad"}
 
 try:  # PyYAML es opcional
@@ -126,10 +146,129 @@ def revisar_skill(ruta: Path, plugin: str, informe: Informe):
             anotar(rel, "description con etiquetas XML (< >)")
         if plugin == PLUGIN_PROPIO and "usar cuando" not in descripcion.lower():
             informe.aviso(rel, "description sin «Usar cuando…»: ayuda a que Claude sepa cuándo usarla")
+        if plugin == PLUGIN_PROPIO and ("<" in descripcion or ">" in descripcion):
+            informe.error(rel, "description con < o >: en este kit no van (algunos lectores las rechazan)")
+    if plugin == PLUGIN_PROPIO:
+        texto = ruta.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+        linea = next((l for l in texto.split("\n")[1:40] if l.startswith("description:")), "")
+        if linea and linea.split(":", 1)[1].strip()[:1] not in ("\"", "'"):
+            informe.error(rel, "description sin comillas: va entre comillas dobles (regla del kit)")
+        lineas = texto.count("\n") + 1
+        if lineas > MAX_LINEAS_SKILL:
+            informe.aviso(rel, f"SKILL.md de {lineas} líneas (máximo ~{MAX_LINEAS_SKILL}): pasar lo largo a references/")
     return nombre or ruta.parent.name
 
 
-def revisar(conteo: bool) -> int:
+def sin_codigo(texto: str) -> str:
+    """Saca los bloques de código y el código en línea, para no tomar código por links o nombres."""
+    return CODIGO_EN_LINEA.sub("", BLOQUE_CODIGO.sub("", texto))
+
+
+def revisar_readme(tabla, propias: set, informe: Informe):
+    """El README tiene que decir lo mismo que el kit: total, skills por plugin y skills propias."""
+    ruta = RAIZ / "README.md"
+    if not ruta.is_file():
+        informe.error("README.md", "no existe")
+        return
+    texto = ruta.read_text(encoding="utf-8", errors="replace")
+    total = sum(c for _, c in tabla)
+    m = re.search(r"\*\*(\d+)\s+skills\*\*", texto)
+    if not m:
+        informe.error("README.md", "no se encuentra el total de skills («**N skills**»)")
+    elif int(m.group(1)) != total:
+        informe.error("README.md", f"dice {m.group(1)} skills y el kit tiene {total}")
+    filas = {n: int(c) for n, c in re.findall(r"^\|\s*`([a-z0-9-]+)`\s*\|\s*(\d+)\s*\|", texto, re.M)}
+    for nombre, c in tabla:
+        if nombre not in filas:
+            informe.error("README.md", f"falta el plugin «{nombre}» en la tabla de plugins")
+        elif filas[nombre] != c:
+            informe.error("README.md", f"la tabla de plugins dice {filas[nombre]} skills para «{nombre}» y tiene {c}")
+    seccion = re.search(r"^## Skills propias.*?(?=^## |\Z)", texto, re.M | re.S)
+    if not seccion:
+        informe.error("README.md", "no se encuentra la sección «## Skills propias»")
+        return
+    listadas = set(re.findall(r"^\|\s*`([a-z0-9-]+)`\s*\|", seccion.group(0), re.M))
+    for n in sorted(propias - listadas):
+        informe.error("README.md", f"falta «{n}» en la tabla de skills propias")
+    for n in sorted(listadas - propias):
+        informe.error("README.md", f"la tabla de skills propias nombra «{n}», que no es una skill propia")
+
+
+def revisar_referencias(carpeta: Path, validos: set, informe: Informe):
+    """Skills nombradas en negrita que no existen y links relativos rotos, en los .md del plugin propio."""
+    for md in sorted(carpeta.rglob("*.md")):
+        rel = md.relative_to(RAIZ).as_posix()
+        texto = sin_codigo(md.read_text(encoding="utf-8", errors="replace"))
+        faltan = sorted({n for n in NEGRITA_SKILL.findall(texto) if n not in validos})
+        for n in faltan:
+            informe.error(rel, f"nombra la skill **{n}**, que no existe en el kit")
+        for destino in LINK_MD.findall(texto):
+            if re.match(r"^[a-z][a-z0-9+.-]*:", destino, re.I) or destino.startswith(("#", "<")):
+                continue
+            camino = destino.split("#", 1)[0].replace("%20", " ")
+            if camino and not (md.parent / camino).exists():
+                informe.error(rel, f"link roto: {destino}")
+
+
+def archivos_del_repo():
+    """Lo que git subiría (seguidos y nuevos no ignorados); sin git, todo menos .git."""
+    try:
+        r = subprocess.run(["git", "-C", str(RAIZ), "ls-files", "-co", "--exclude-standard", "-z"],
+                           capture_output=True, timeout=60)
+        if r.returncode == 0:
+            return [RAIZ / p for p in r.stdout.decode("utf-8", "replace").split("\0") if p]
+    except (OSError, subprocess.TimeoutExpired):
+        pass
+    return [p for p in RAIZ.rglob("*") if p.is_file() and ".git" not in p.parts]
+
+
+def revisar_higiene(informe: Informe):
+    """Basura que no tiene que llegar al repo público (respeta el .gitignore)."""
+    for ruta in archivos_del_repo():
+        if not ruta.is_file():
+            continue
+        rel = ruta.relative_to(RAIZ).as_posix()
+        if "__pycache__" in ruta.parts or ruta.suffix in (".pyc", ".pyo"):
+            informe.error(rel, "no se suben __pycache__ ni .pyc")
+        elif ruta.name in (".DS_Store", "Thumbs.db", "desktop.ini"):
+            informe.error(rel, "archivo del sistema operativo: no va al repo")
+        elif ruta.stat().st_size > 5_000_000:
+            informe.aviso(rel, f"archivo de {ruta.stat().st_size / 1e6:.1f} MB: el repo es público y se clona entero")
+
+
+def correr_demos(carpeta: Path, informe: Informe) -> int:
+    """Corre «demo» en cada script del plugin propio que lo tenga. Devuelve cuántos pasaron."""
+    pasaron = 0
+    entorno = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+    with tempfile.TemporaryDirectory(prefix="demos_kit_") as tmp:
+        for script in sorted(carpeta.glob("*/scripts/*.py")):
+            rel = script.relative_to(RAIZ).as_posix()
+            fuente = script.read_text(encoding="utf-8", errors="replace")
+            if not TIENE_DEMO.search(fuente) or re.search(r"^\s*import bpy\b", fuente, re.M):
+                continue  # sin demo, o corre adentro de Blender
+            if "ffmpeg" in fuente and shutil.which("ffmpeg") is None:
+                informe.aviso(rel, "demo sin correr: necesita ffmpeg")
+                continue
+            try:
+                r = subprocess.run([sys.executable, "-X", "utf8", "-I", str(script), "demo"], cwd=tmp,
+                                   capture_output=True, text=True, encoding="utf-8", errors="replace",
+                                   timeout=300, env=entorno)
+            except subprocess.TimeoutExpired:
+                informe.error(rel, "el demo tardó más de 300 s")
+                continue
+            if r.returncode == 0:
+                pasaron += 1
+                continue
+            detalle = " | ".join((r.stderr or r.stdout).strip().splitlines()[-3:])
+            falta = re.search(r"No module named '([^']+)'", r.stderr or "")
+            if falta:
+                informe.aviso(rel, f"demo sin correr: falta la biblioteca {falta.group(1)}")
+            else:
+                informe.error(rel, f"el demo falló (código {r.returncode}): {detalle}")
+    return pasaron
+
+
+def revisar(conteo: bool, completo: bool = False) -> int:
     informe = Informe()
     ruta_mk = RAIZ / ".claude-plugin" / "marketplace.json"
     try:
@@ -186,13 +325,23 @@ def revisar(conteo: bool) -> int:
             if patron.search(texto):
                 informe.error(rel, f"parece contener una {que}")
 
+    demos = None
+    if completo:
+        carpeta_propia = RAIZ / "plugins" / PLUGIN_PROPIO / "skills"
+        propias = {s.parent.name for s in carpeta_propia.glob("*/SKILL.md")}
+        revisar_readme(tabla, propias, informe)
+        revisar_referencias(carpeta_propia, set(por_nombre_skill) | set(nombres), informe)
+        revisar_higiene(informe)
+        demos = correr_demos(carpeta_propia, informe)
+
     total = sum(c for _, c in tabla)
     if conteo:
         print("| Plugin | Skills |\n|---|---:|")
         for nombre, c in tabla:
             print(f"| `{nombre}` | {c} |")
         print(f"| **Total** | **{total}** |\n")
-    print(f"Kit: {len(tabla)} plugins, {total} skills. {len(informe.errores)} errores, {len(informe.avisos)} avisos.")
+    extra = f" Demos que pasaron: {demos}." if demos is not None else ""
+    print(f"Kit: {len(tabla)} plugins, {total} skills. {len(informe.errores)} errores, {len(informe.avisos)} avisos.{extra}")
     for e in informe.errores:
         print(f"  ERROR  {e}")
     for a in informe.avisos[:40]:
@@ -210,7 +359,10 @@ def main(argv=None) -> int:
             pass
     parser = argparse.ArgumentParser(description="Revisa el marketplace kit-ingenieria-3d y sus skills.")
     parser.add_argument("--conteo", action="store_true", help="mostrar la tabla de skills por plugin")
-    return revisar(parser.parse_args(argv).conteo)
+    parser.add_argument("--completo", action="store_true",
+                        help="además: README al día, referencias entre skills, links, __pycache__ y demos de los scripts")
+    args = parser.parse_args(argv)
+    return revisar(args.conteo, args.completo)
 
 
 if __name__ == "__main__":

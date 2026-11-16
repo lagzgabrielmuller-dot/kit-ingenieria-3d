@@ -7,7 +7,7 @@ Marketplace **público** de plugins de Claude con skills para electromecánica, 
 - `plugins/ingenieria-3d/`: el plugin **propio**. Cada skill en `skills/<nombre>/SKILL.md`, con `scripts/`, `references/` o `plantilla/` si hacen falta.
 - `plugins/<otro>/`: skills de la comunidad, copiadas **sin modificar**, con `CREDITOS.md` (repo, commit, licencia, requisitos, revisión) y `licencias/`.
 - `CATALOGO.md`: recursos que no se copiaron, con el motivo.
-- `scripts/validar_kit.py`: revisa todo (lo corre GitHub Actions en cada push, `.github/workflows/validar.yml`).
+- `scripts/validar_kit.py`: revisa todo; con `--completo`, también el README y los demos (así lo corre GitHub Actions en cada push, `.github/workflows/validar.yml`).
 
 ## Reglas
 - **Repo público**: nada personal (nombres de personas, escuela, profesores, direcciones), ni claves, ni `.zip`, ni `.env`.
@@ -19,6 +19,6 @@ Marketplace **público** de plugins de Claude con skills para electromecánica, 
   - Scripts: Python 3.9+, solo biblioteca estándar si se puede, con `--help` y `demo` que reproduce el ejemplo del SKILL.md.
   - Las skills se referencian entre sí por su nombre en negrita (por ejemplo **calculos-ingenieria**) en vez de repetir contenido.
 - Skills de la comunidad: no se editan. Si hay que hacer un arreglo de compatibilidad (por ejemplo, comillas en el frontmatter), se anota en el `CREDITOS.md` de ese plugin. Para actualizarlas: volver a copiarlas desde su repo y anotar el commit nuevo.
-- Antes de commitear: `python scripts/validar_kit.py --conteo` sin errores, y actualizar en el `README.md` la tabla de plugins, el total de skills y la tabla de skills propias; en `marketplace.json`, la descripción del plugin que cambió.
+- Antes de commitear: actualizar en el `README.md` la tabla de plugins, el total de skills y la tabla de skills propias, y en `marketplace.json` la descripción del plugin que cambió. Después, `python scripts/validar_kit.py --conteo --completo` sin errores: además de lo de siempre, revisa que el README esté al día, que las skills nombradas en negrita existan, los links de los `.md`, que no se cuele basura (`__pycache__`, archivos de más de 5 MB) y corre el `demo` de cada script. Un script nuevo con subcomando `demo` entra solo en GitHub Actions; el demo termina con código 0 si todo coincide.
 - Los plugins no tienen número de versión: cada push a `main` es una actualización (en Claude Code se baja con `/plugin marketplace update kit-ingenieria-3d`).
 - Commits en español, cortos: qué cambió y por qué.

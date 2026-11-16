@@ -20,27 +20,14 @@ jobs:
           python-version: "3.12"
       - name: PyYAML (para leer el frontmatter igual que un lector estricto)
         run: pip install pyyaml
-      - name: Marketplace, plugins y skills
-        run: python scripts/validar_kit.py --conteo
-      - name: Los demos de los scripts propios andan
-        run: |
-          set -e
-          cd /tmp
-          for s in maquinas-electricas/scripts/maquinas.py ensayos-materiales/scripts/ensayos.py \
-                   neumatica-electroneumatica/scripts/neumatica.py cnc-mecanizado/scripts/cnc.py \
-                   revision-tecnica/scripts/verificar_numeros.py revision-tecnica/scripts/revisar_documento.py \
-                   progreso-en-vivo/scripts/progreso.py equipo-de-modelos/scripts/guias.py \
-                   secado-y-psicrometria/scripts/psicrometria.py elementos-de-maquinas/scripts/elementos.py \
-                   instalaciones-electricas/scripts/electricas.py; do
-            echo "== $s"
-            python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/$s" demo > /dev/null
-          done
-          echo "== simulador-educativo/scripts/validar_modelo_kloss.py"
-          python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/simulador-educativo/scripts/validar_modelo_kloss.py" /tmp/casos.json > /dev/null
       - name: ffmpeg (para el demo de video-calidad)
         run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends ffmpeg
-      - name: El demo de video-calidad anda
-        run: cd /tmp && python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/video-calidad/scripts/video_calidad.py" demo | tail -3
+      - name: Marketplace, plugins, skills, README al día y demos de los scripts propios
+        run: python scripts/validar_kit.py --conteo --completo
+      - name: El validador del modelo de Kloss anda
+        run: |
+          cd /tmp
+          python -I "$GITHUB_WORKSPACE/plugins/ingenieria-3d/skills/simulador-educativo/scripts/validar_modelo_kloss.py" /tmp/casos.json > /dev/null
       - name: Validador oficial de Claude Code (manifiestos y skills)
         run: |
           npm install -g --silent @anthropic-ai/claude-code
